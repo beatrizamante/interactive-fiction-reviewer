@@ -36,7 +36,7 @@ export class UserController {
    *             schema:
    *               type: array
    *               items:
-   *                 $ref: '#/components/schemas/user'
+   *                 $ref: '#/components/schemas/User'
    */
   static list(req: Request, res: Response): void {
     res.json(users);
@@ -72,7 +72,7 @@ export class UserController {
    *         content:
    *           application/json:
    *             schema:
-   *               $ref: '#/components/schemas/user'
+   *               $ref: '#/components/schemas/User'
    *       400:
    *         description: Invalid data
    */
@@ -139,7 +139,7 @@ export class UserController {
    *         content:
    *           application/json:
    *             schema:
-   *               $ref: '#/components/schemas/user'
+   *               $ref: '#/components/schemas/User'
    *       404:
    *         description: User not found
    */
