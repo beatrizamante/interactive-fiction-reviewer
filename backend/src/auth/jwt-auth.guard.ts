@@ -6,6 +6,8 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { FastifyRequest } from 'fastify';
+import { JwtPayload } from './jwt-payload.interface.js';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -15,7 +17,9 @@ export class JwtAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context
+      .switchToHttp()
+      .getRequest<FastifyRequest & { user: JwtPayload }>();
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -23,7 +27,7 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
         secret: this.configService.get<string>('JWT_SECRET'),
       });
       request.user = payload;
@@ -34,7 +38,9 @@ export class JwtAuthGuard implements CanActivate {
     return true;
   }
 
-  private extractTokenFromHeader(request: any): string | undefined {
+  private extractTokenFromHeader(
+    request: FastifyRequest & { user?: JwtPayload },
+  ): string | undefined {
     const [type, token] = request.headers?.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }
