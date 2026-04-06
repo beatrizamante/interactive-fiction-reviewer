@@ -1,27 +1,26 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import {
-  NestFastifyApplication,
-  FastifyAdapter,
-} from '@nestjs/platform-fastify';
-import {
-  ValidationPipe,
-  UnauthorizedException,
   ExecutionContext,
+  UnauthorizedException,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
-  vi,
-  describe,
-  it,
-  expect,
-  beforeAll,
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
   afterAll,
+  beforeAll,
   beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
 } from 'vitest';
-
-import { AuthorsController } from './authors.controller.js';
-import { AuthorsService } from './authors.service.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { JwtPayload } from '../auth/jwt-payload.interface.js';
+import { AuthorsController } from './authors.controller.js';
+import { AuthorsService } from './authors.service.js';
 
 const mockAuthorsService = {
   create: vi.fn(),

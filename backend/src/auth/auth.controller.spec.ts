@@ -1,17 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import {
-  NestFastifyApplication,
-  FastifyAdapter,
-} from '@nestjs/platform-fastify';
+/** biome-ignore-all lint/style/useImportType: NestJS needs these files to be imported as packages for Dependency Injection*/
 import { ValidationPipe } from '@nestjs/common';
 import {
-  vi,
-  describe,
-  it,
-  expect,
-  beforeAll,
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import { Test, TestingModule } from '@nestjs/testing';
+import {
   afterAll,
+  beforeAll,
   beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
 } from 'vitest';
 
 import { AuthController } from './auth.controller.js';

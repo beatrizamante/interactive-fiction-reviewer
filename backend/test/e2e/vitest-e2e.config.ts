@@ -9,8 +9,8 @@ const TEST_DB_URL =
 
 export default defineConfig({
   test: {
-    root: path.resolve(__dirname, '..'),
-    include: ['test/db/**/*.spec.ts'],
+    root: path.resolve(__dirname, '../..'),
+    include: ['test/e2e/**/*.e2e.spec.ts'],
     globalSetup: ['./test/global-setup.ts'],
     fileParallelism: false,
     testTimeout: 30_000,

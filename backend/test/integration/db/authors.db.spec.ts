@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 
-import { AuthorsService } from '../../src/authors/authors.service.js';
-import { PrismaService } from '../../src/prisma/prisma.service.js';
-import { cleanDb } from '../helpers/clean-db.js';
+import { AuthorsService } from '../../../src/authors/authors.service.js';
+import { PrismaService } from '../../../src/prisma/prisma.service.js';
+import { cleanDb } from '../../helpers/clean-db.js';
 
 let service: AuthorsService;
 let prisma: PrismaService;

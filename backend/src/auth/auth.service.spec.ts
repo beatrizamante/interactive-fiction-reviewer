@@ -1,11 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { JwtService } from '@nestjs/jwt';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
-import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as bcrypt from 'bcryptjs';
-
-import { AuthService } from './auth.service.js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { AuthService } from './auth.service.js';
 
 vi.mock('bcryptjs', () => ({
   hash: vi.fn(),

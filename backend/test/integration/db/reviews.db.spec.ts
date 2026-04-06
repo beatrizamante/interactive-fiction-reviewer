@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 
-import { ReviewsService } from '../../src/reviews/reviews.service.js';
-import { PrismaService } from '../../src/prisma/prisma.service.js';
-import { cleanDb } from '../helpers/clean-db.js';
+import { ReviewsService } from '../../../src/reviews/reviews.service.js';
+import { PrismaService } from '../../../src/prisma/prisma.service.js';
+import { cleanDb } from '../../helpers/clean-db.js';
 
 let service: ReviewsService;
 let prisma: PrismaService;

@@ -12,9 +12,9 @@ import {
 } from 'vitest';
 import * as bcrypt from 'bcryptjs';
 
-import { AuthService } from '../../src/auth/auth.service.js';
-import { PrismaService } from '../../src/prisma/prisma.service.js';
-import { cleanDb } from '../helpers/clean-db.js';
+import { AuthService } from '../../../src/auth/auth.service.js';
+import { PrismaService } from '../../../src/prisma/prisma.service.js';
+import { cleanDb } from '../../helpers/clean-db.js';
 
 const mockJwtService = {
   signAsync: vi.fn().mockResolvedValue('test-access-token'),
