@@ -20,6 +20,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:db": "vitest --config ./test/integration/db/vitest-db.config.ts",
     "test:e2e": "vitest --config ./test/e2e/vitest-e2e.config.ts",
+    "test:all": "vitest --config vitest.config.ts && vitest --config ./test/integration/db/vitest-db.config.ts && vitest --config ./test/e2e/vitest-e2e.config.ts",
     "seed": "tsx prisma/seed.ts"
   },
   "prisma": {
