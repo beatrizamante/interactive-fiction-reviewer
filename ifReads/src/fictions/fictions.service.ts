@@ -64,6 +64,17 @@ export class FictionsService {
     return fiction;
   }
 
+  async findMine(userId: number) {
+    return this.prisma.fiction.findMany({
+      where: { authorId: userId },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        author: { select: { id: true, name: true } },
+        authors: true,
+      },
+    });
+  }
+
   async update(id: number, dto: UpdateFictionDto, userId: number) {
     const fiction = await this.prisma.fiction.findUnique({
       where: { id },
@@ -80,6 +91,10 @@ export class FictionsService {
     return this.prisma.fiction.update({
       where: { id },
       data: dto,
+      include: {
+        author: { select: { id: true, name: true } },
+        authors: true,
+      },
     });
   }
 

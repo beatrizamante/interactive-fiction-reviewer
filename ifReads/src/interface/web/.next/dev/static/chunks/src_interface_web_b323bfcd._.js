@@ -520,6 +520,10 @@ const usersApi = {
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$app$2f$api$2f$client$2f$axiosClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].patch('/users/me', data);
         return response.data;
     },
+    changePassword: async (data)=>{
+        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$app$2f$api$2f$client$2f$axiosClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].patch('/users/me/password', data);
+        return response.data;
+    },
     getFavorites: async ()=>{
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$app$2f$api$2f$client$2f$axiosClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].get('/users/me/favorites');
         return response.data;
@@ -584,8 +588,10 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                 setIsFav(true);
                 onToggleFavorite?.(fictionId, true);
             }
-        } catch  {
-        // 401 = não autenticado, ignorar silenciosamente
+        } catch (err) {
+            if (err?.response?.status !== 401) {
+                console.error('[StoryCard] favorite toggle failed:', err?.response?.data ?? err?.message ?? err);
+            }
         } finally{
             setFavLoading(false);
         }
@@ -602,7 +608,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             className: "absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 68,
+                            lineNumber: 73,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -611,18 +617,18 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                 className: "w-10 h-10 text-primary/40"
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 70,
+                                lineNumber: 75,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 69,
+                            lineNumber: 74,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                    lineNumber: 67,
+                    lineNumber: 72,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -641,7 +647,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                     children: story.genre
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                    lineNumber: 79,
+                                                    lineNumber: 84,
                                                     columnNumber: 17
                                                 }, this),
                                                 story.rating !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -651,7 +657,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                             className: "w-3.5 h-3.5 fill-primary text-primary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                            lineNumber: 84,
+                                                            lineNumber: 89,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -659,7 +665,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                             children: story.rating
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                            lineNumber: 85,
+                                                            lineNumber: 90,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -670,19 +676,19 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                            lineNumber: 88,
+                                                            lineNumber: 93,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                    lineNumber: 83,
+                                                    lineNumber: 88,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 78,
+                                            lineNumber: 83,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -690,7 +696,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             children: story.title
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 92,
+                                            lineNumber: 97,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -703,13 +709,13 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 95,
+                                            lineNumber: 100,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 77,
+                                    lineNumber: 82,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -722,18 +728,18 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: `w-5 h-5 transition-colors ${isFav ? 'fill-primary text-primary' : ''}`
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 110,
+                                        lineNumber: 115,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 103,
+                                    lineNumber: 108,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 76,
+                            lineNumber: 81,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -741,7 +747,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             children: story.description
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 116,
+                            lineNumber: 121,
                             columnNumber: 11
                         }, this),
                         (story.playTime || story.wordCount || story.tags?.length) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -754,14 +760,14 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             className: "w-3.5 h-3.5"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 124,
+                                            lineNumber: 129,
                                             columnNumber: 19
                                         }, this),
                                         story.playTime
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 123,
+                                    lineNumber: 128,
                                     columnNumber: 17
                                 }, this),
                                 story.wordCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -771,7 +777,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             className: "w-3.5 h-3.5"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 130,
+                                            lineNumber: 135,
                                             columnNumber: 19
                                         }, this),
                                         (story.wordCount / 1000).toFixed(0),
@@ -779,7 +785,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 129,
+                                    lineNumber: 134,
                                     columnNumber: 17
                                 }, this),
                                 story.tags && story.tags.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -789,30 +795,30 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             children: tag
                                         }, tag, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 137,
+                                            lineNumber: 142,
                                             columnNumber: 21
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 135,
+                                    lineNumber: 140,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 121,
+                            lineNumber: 126,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                    lineNumber: 75,
+                    lineNumber: 80,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/interface/web/components/story-card.tsx",
-            lineNumber: 62,
+            lineNumber: 67,
             columnNumber: 7
         }, this);
     }
@@ -827,7 +833,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         className: "absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 160,
+                        lineNumber: 165,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -836,12 +842,12 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             className: "w-12 h-12 text-primary/40"
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 162,
+                            lineNumber: 167,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 161,
+                        lineNumber: 166,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -854,18 +860,18 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             className: `w-4 h-4 transition-colors ${isFav ? 'fill-primary text-primary' : ''}`
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 173,
+                            lineNumber: 178,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 166,
+                        lineNumber: 171,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                lineNumber: 159,
+                lineNumber: 164,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -879,7 +885,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                 children: story.genre
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 182,
+                                lineNumber: 187,
                                 columnNumber: 11
                             }, this),
                             story.rating !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -889,7 +895,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: "w-3 h-3 fill-primary text-primary"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 187,
+                                        lineNumber: 192,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -897,7 +903,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         children: story.rating
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 188,
+                                        lineNumber: 193,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -908,19 +914,19 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 191,
+                                        lineNumber: 196,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 186,
+                                lineNumber: 191,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 181,
+                        lineNumber: 186,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -928,7 +934,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         children: story.title
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 196,
+                        lineNumber: 201,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -941,7 +947,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 200,
+                        lineNumber: 205,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -949,7 +955,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         children: story.description
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 208,
+                        lineNumber: 213,
                         columnNumber: 9
                     }, this),
                     (story.playTime || story.wordCount) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -962,14 +968,14 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: "w-3 h-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 216,
+                                        lineNumber: 221,
                                         columnNumber: 17
                                     }, this),
                                     story.playTime
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 215,
+                                lineNumber: 220,
                                 columnNumber: 15
                             }, this),
                             story.wordCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -979,7 +985,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: "w-3 h-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 222,
+                                        lineNumber: 227,
                                         columnNumber: 17
                                     }, this),
                                     (story.wordCount / 1000).toFixed(0),
@@ -987,25 +993,25 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 221,
+                                lineNumber: 226,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 213,
+                        lineNumber: 218,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                lineNumber: 180,
+                lineNumber: 185,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/interface/web/components/story-card.tsx",
-        lineNumber: 154,
+        lineNumber: 159,
         columnNumber: 5
     }, this);
 }
@@ -1383,6 +1389,44 @@ const PLATFORMS = [
     'Web-based',
     'Other'
 ];
+const AUTHOR_ROLES = [
+    {
+        value: 'main_author',
+        label: 'Main Author'
+    },
+    {
+        value: 'co_author',
+        label: 'Co-Author'
+    },
+    {
+        value: 'writer',
+        label: 'Writer'
+    },
+    {
+        value: 'editor',
+        label: 'Editor'
+    },
+    {
+        value: 'artist',
+        label: 'Artist'
+    },
+    {
+        value: 'programmer',
+        label: 'Programmer'
+    },
+    {
+        value: 'composer',
+        label: 'Composer'
+    },
+    {
+        value: 'beta_tester',
+        label: 'Beta Tester'
+    },
+    {
+        value: 'contributor',
+        label: 'Contributor'
+    }
+];
 function CreateStoryModal({ isOpen, onClose, onSuccess }) {
     _s();
     const [title, setTitle] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
@@ -1398,11 +1442,47 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
     const [step, setStep] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(1);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [authors, setAuthors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
+        {
+            id: '1',
+            name: 'You',
+            role: 'main_author'
+        }
+    ]);
+    const [newAuthorName, setNewAuthorName] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [newAuthorRole, setNewAuthorRole] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('co_author');
     const toggleGenre = (genre)=>{
         setSelectedGenres((prev)=>prev.includes(genre) ? prev.filter((g)=>g !== genre) : prev.length < 3 ? [
                 ...prev,
                 genre
             ] : prev);
+    };
+    const addAuthor = ()=>{
+        if (newAuthorName.trim()) {
+            setAuthors((prev)=>[
+                    ...prev,
+                    {
+                        id: Date.now().toString(),
+                        name: newAuthorName.trim(),
+                        role: newAuthorRole
+                    }
+                ]);
+            setNewAuthorName('');
+            setNewAuthorRole('co_author');
+        }
+    };
+    const removeAuthor = (id)=>{
+        if (authors[0]?.id === id) return;
+        setAuthors((prev)=>prev.filter((a)=>a.id !== id));
+    };
+    const updateAuthorRole = (id, role)=>{
+        setAuthors((prev)=>prev.map((a)=>a.id === id ? {
+                    ...a,
+                    role
+                } : a));
+    };
+    const getRoleLabel = (roleValue)=>{
+        return AUTHOR_ROLES.find((r)=>r.value === roleValue)?.label || roleValue;
     };
     const handleSubmit = async (e)=>{
         e.preventDefault();
@@ -1437,6 +1517,15 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
         setEstimatedTime('');
         setTags('');
         setStep(1);
+        setAuthors([
+            {
+                id: '1',
+                name: 'You',
+                role: 'main_author'
+            }
+        ]);
+        setNewAuthorName('');
+        setNewAuthorRole('co_author');
         setError(null);
     };
     const canProceedStep1 = title.trim() && description.trim() && selectedGenres.length > 0;
@@ -1457,24 +1546,24 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                     className: "w-6 h-6 text-primary"
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 136,
+                                    lineNumber: 189,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                lineNumber: 135,
+                                lineNumber: 188,
                                 columnNumber: 13
                             }, this),
-                            step === 1 ? 'Create Your Story' : step === 2 ? 'Story Details' : 'Final Touches'
+                            step === 1 ? 'Create Your Story' : step === 2 ? 'Story Details' : step === 3 ? 'Authors & Credits' : 'Final Touches'
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                        lineNumber: 134,
+                        lineNumber: 187,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                    lineNumber: 133,
+                    lineNumber: 186,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1482,7 +1571,8 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                     children: [
                         1,
                         2,
-                        3
+                        3,
+                        4
                     ].map((s)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex items-center gap-2 flex-1",
                             children: [
@@ -1491,25 +1581,25 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                     children: s
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 150,
+                                    lineNumber: 205,
                                     columnNumber: 15
                                 }, this),
-                                s < 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                s < 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: `flex-1 h-1 rounded transition-colors ${s < step ? 'bg-primary' : 'bg-muted'}`
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 160,
+                                    lineNumber: 215,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, s, true, {
                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                            lineNumber: 149,
+                            lineNumber: 204,
                             columnNumber: 13
                         }, this))
                 }, void 0, false, {
                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                    lineNumber: 147,
+                    lineNumber: 202,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1531,13 +1621,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: "*"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 176,
+                                                    lineNumber: 231,
                                                     columnNumber: 31
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 175,
+                                            lineNumber: 230,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1547,13 +1637,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             className: "bg-input border-border focus:border-primary focus:ring-primary"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 178,
+                                            lineNumber: 233,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 174,
+                                    lineNumber: 229,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1568,13 +1658,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: "*"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 188,
+                                                    lineNumber: 243,
                                                     columnNumber: 31
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 187,
+                                            lineNumber: 242,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Textarea"], {
@@ -1584,7 +1674,7 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             className: "bg-input border-border focus:border-primary focus:ring-primary min-h-[120px] resize-none"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 190,
+                                            lineNumber: 245,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1595,13 +1685,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 196,
+                                            lineNumber: 251,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 186,
+                                    lineNumber: 241,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1616,7 +1706,7 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: "*"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 203,
+                                                    lineNumber: 258,
                                                     columnNumber: 26
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1624,13 +1714,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: "(Select up to 3)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 204,
+                                                    lineNumber: 259,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 202,
+                                            lineNumber: 257,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1642,18 +1732,18 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: genre
                                                 }, genre, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 210,
+                                                    lineNumber: 265,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 208,
+                                            lineNumber: 263,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 201,
+                                    lineNumber: 256,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1667,19 +1757,19 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             className: "w-4 h-4 ml-2"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 233,
+                                            lineNumber: 288,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 226,
+                                    lineNumber: 281,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                            lineNumber: 173,
+                            lineNumber: 228,
                             columnNumber: 13
                         }, this),
                         step === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1695,7 +1785,7 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     className: "w-4 h-4 text-primary"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 243,
+                                                    lineNumber: 298,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Story URL ",
@@ -1704,13 +1794,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: "*"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 244,
+                                                    lineNumber: 299,
                                                     columnNumber: 29
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 242,
+                                            lineNumber: 297,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1720,7 +1810,7 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             className: "bg-input border-border focus:border-primary focus:ring-primary"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 246,
+                                            lineNumber: 301,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1728,13 +1818,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             children: "Link to where readers can play your story"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 252,
+                                            lineNumber: 307,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 241,
+                                    lineNumber: 296,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1747,14 +1837,14 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     className: "w-4 h-4 text-primary"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 259,
+                                                    lineNumber: 314,
                                                     columnNumber: 19
                                                 }, this),
                                                 "Cover Image URL"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 258,
+                                            lineNumber: 313,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1764,7 +1854,7 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             className: "bg-input border-border focus:border-primary focus:ring-primary"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 262,
+                                            lineNumber: 317,
                                             columnNumber: 17
                                         }, this),
                                         coverUrl && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1775,7 +1865,7 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: "Preview:"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 270,
+                                                    lineNumber: 325,
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1789,24 +1879,24 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                        lineNumber: 274,
+                                                        lineNumber: 329,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 273,
+                                                    lineNumber: 328,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 269,
+                                            lineNumber: 324,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 257,
+                                    lineNumber: 312,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1821,13 +1911,13 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: "*"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 289,
+                                                    lineNumber: 344,
                                                     columnNumber: 37
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 288,
+                                            lineNumber: 343,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1839,18 +1929,18 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     children: platform
                                                 }, platform, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 293,
+                                                    lineNumber: 348,
                                                     columnNumber: 21
                                                 }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 291,
+                                            lineNumber: 346,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 287,
+                                    lineNumber: 342,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1864,7 +1954,7 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             children: "Back"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 310,
+                                            lineNumber: 365,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1878,254 +1968,278 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                                     className: "w-4 h-4 ml-2"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 325,
+                                                    lineNumber: 380,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 318,
+                                            lineNumber: 373,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 309,
+                                    lineNumber: 364,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                            lineNumber: 240,
+                            lineNumber: 295,
                             columnNumber: 13
                         }, this),
                         step === 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "space-y-5",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "grid grid-cols-3 gap-4",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "space-y-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "text-sm font-medium text-foreground",
-                                                    children: "Chapters"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 336,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                                    type: "number",
-                                                    value: chapters,
-                                                    onChange: (e)=>setChapters(e.target.value),
-                                                    placeholder: "e.g., 12",
-                                                    min: "1",
-                                                    className: "bg-input border-border focus:border-primary focus:ring-primary"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 339,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 335,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "space-y-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "text-sm font-medium text-foreground",
-                                                    children: "Endings"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 349,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                                    type: "number",
-                                                    value: endings,
-                                                    onChange: (e)=>setEndings(e.target.value),
-                                                    placeholder: "e.g., 7",
-                                                    min: "1",
-                                                    className: "bg-input border-border focus:border-primary focus:ring-primary"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 352,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 348,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "space-y-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                    className: "text-sm font-medium text-foreground",
-                                                    children: "Play Time"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 362,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                                    value: estimatedTime,
-                                                    onChange: (e)=>setEstimatedTime(e.target.value),
-                                                    placeholder: "e.g., 2-3 hrs",
-                                                    className: "bg-input border-border focus:border-primary focus:ring-primary"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 365,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 361,
-                                            columnNumber: 17
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 334,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "space-y-2",
+                                    className: "space-y-3",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                             className: "text-sm font-medium text-foreground flex items-center gap-2",
                                             children: [
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$tag$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Tag$3e$__["Tag"], {
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Users, {
                                                     className: "w-4 h-4 text-primary"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 376,
+                                                    lineNumber: 391,
                                                     columnNumber: 19
                                                 }, this),
-                                                "Tags"
+                                                "Authors & Contributors"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 375,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
-                                            value: tags,
-                                            onChange: (e)=>setTags(e.target.value),
-                                            placeholder: "choice-based, branching narrative, multiple endings...",
-                                            className: "bg-input border-border focus:border-primary focus:ring-primary"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 379,
+                                            lineNumber: 390,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                             className: "text-xs text-muted-foreground",
-                                            children: "Separate tags with commas"
+                                            children: "Add all the people who contributed to this story. You can assign different roles to each contributor."
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 385,
+                                            lineNumber: 394,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 374,
+                                    lineNumber: 389,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "p-4 bg-muted/50 rounded-lg border border-border",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                            className: "text-sm font-medium text-foreground mb-3",
-                                            children: "Story Preview"
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 392,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex gap-4",
+                                    className: "space-y-2",
+                                    children: authors.map((author, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "w-20 h-28 bg-secondary rounded-lg flex items-center justify-center overflow-hidden shrink-0",
-                                                    children: coverUrl ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                                        src: coverUrl,
-                                                        alt: "Cover",
-                                                        className: "w-full h-full object-cover"
+                                                    className: "w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-sm font-medium text-primary",
+                                                        children: author.name.charAt(0).toUpperCase()
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                        lineNumber: 398,
-                                                        columnNumber: 23
-                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"], {
-                                                        className: "w-8 h-8 text-muted-foreground"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                        lineNumber: 404,
+                                                        lineNumber: 408,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 396,
-                                                    columnNumber: 19
+                                                    lineNumber: 407,
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "flex-1 min-w-0",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                        className: "text-sm font-medium text-foreground truncate",
+                                                        children: [
+                                                            author.name,
+                                                            index === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "text-xs text-muted-foreground ml-2",
+                                                                children: "(You)"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                                lineNumber: 416,
+                                                                columnNumber: 27
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                        lineNumber: 413,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 412,
+                                                    columnNumber: 21
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
+                                                    value: author.role,
+                                                    onValueChange: (value)=>updateAuthorRole(author.id, value),
                                                     children: [
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
-                                                            className: "font-serif font-semibold text-foreground truncate",
-                                                            children: title || 'Your Story Title'
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectTrigger, {
+                                                            className: "w-36 bg-input border-border",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectValue, {}, void 0, false, {
+                                                                fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                                lineNumber: 429,
+                                                                columnNumber: 25
+                                                            }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                            lineNumber: 408,
-                                                            columnNumber: 21
+                                                            lineNumber: 428,
+                                                            columnNumber: 23
                                                         }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                            className: "text-xs text-muted-foreground mt-1 line-clamp-2",
-                                                            children: description || 'Your story description will appear here...'
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                            lineNumber: 411,
-                                                            columnNumber: 21
-                                                        }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "flex flex-wrap gap-1 mt-2",
-                                                            children: selectedGenres.map((genre)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                    className: "text-xs px-2 py-0.5 bg-primary/20 text-primary rounded-full",
-                                                                    children: genre
-                                                                }, genre, false, {
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectContent, {
+                                                            className: "bg-card border-border",
+                                                            children: AUTHOR_ROLES.map((role)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectItem, {
+                                                                    value: role.value,
+                                                                    children: role.label
+                                                                }, role.value, false, {
                                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                                    lineNumber: 417,
+                                                                    lineNumber: 433,
+                                                                    columnNumber: 27
+                                                                }, this))
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                            lineNumber: 431,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 422,
+                                                    columnNumber: 21
+                                                }, this),
+                                                index !== 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                    type: "button",
+                                                    variant: "ghost",
+                                                    size: "icon",
+                                                    onClick: ()=>removeAuthor(author.id),
+                                                    className: "h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Trash2, {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                        lineNumber: 447,
+                                                        columnNumber: 25
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 440,
+                                                    columnNumber: 23
+                                                }, this)
+                                            ]
+                                        }, author.id, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 403,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                    lineNumber: 401,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-4 bg-secondary/30 rounded-lg border border-dashed border-border",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-sm font-medium text-foreground mb-3 flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(UserPlus, {
+                                                    className: "w-4 h-4 text-primary"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 457,
+                                                    columnNumber: 19
+                                                }, this),
+                                                "Add Another Author"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 456,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                    value: newAuthorName,
+                                                    onChange: (e)=>setNewAuthorName(e.target.value),
+                                                    placeholder: "Author name...",
+                                                    className: "flex-1 bg-input border-border focus:border-primary focus:ring-primary",
+                                                    onKeyDown: (e)=>{
+                                                        if (e.key === 'Enter') {
+                                                            e.preventDefault();
+                                                            addAuthor();
+                                                        }
+                                                    }
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 461,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Select, {
+                                                    value: newAuthorRole,
+                                                    onValueChange: setNewAuthorRole,
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectTrigger, {
+                                                            className: "w-36 bg-input border-border",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectValue, {}, void 0, false, {
+                                                                fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                                lineNumber: 478,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                            lineNumber: 477,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectContent, {
+                                                            className: "bg-card border-border",
+                                                            children: AUTHOR_ROLES.filter((r)=>r.value !== 'main_author').map((role)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(SelectItem, {
+                                                                    value: role.value,
+                                                                    children: role.label
+                                                                }, role.value, false, {
+                                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                                    lineNumber: 484,
                                                                     columnNumber: 25
                                                                 }, this))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                            lineNumber: 415,
+                                                            lineNumber: 480,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                    lineNumber: 407,
+                                                    lineNumber: 473,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                                    type: "button",
+                                                    onClick: addAuthor,
+                                                    disabled: !newAuthorName.trim(),
+                                                    className: "bg-primary hover:bg-primary/90 text-primary-foreground",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Plus, {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                        lineNumber: 496,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 490,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 395,
+                                            lineNumber: 460,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 391,
+                                    lineNumber: 455,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2139,62 +2253,329 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                             children: "Back"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 430,
+                                            lineNumber: 502,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                            type: "submit",
-                                            disabled: loading,
+                                            type: "button",
+                                            onClick: ()=>setStep(4),
                                             className: "flex-1 bg-primary hover:bg-primary/90 text-primary-foreground",
-                                            children: loading ? 'Publicando...' : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$upload$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Upload$3e$__["Upload"], {
-                                                        className: "w-4 h-4 mr-2"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                                        lineNumber: 447,
-                                                        columnNumber: 23
-                                                    }, this),
-                                                    "Publish Story"
-                                                ]
-                                            }, void 0, true)
-                                        }, void 0, false, {
+                                            children: [
+                                                "Continue",
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
+                                                    className: "w-4 h-4 ml-2"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 516,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                            lineNumber: 438,
+                                            lineNumber: 510,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                    lineNumber: 429,
+                                    lineNumber: 501,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                            lineNumber: 333,
+                            lineNumber: 388,
+                            columnNumber: 13
+                        }, this),
+                        step === 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "space-y-5",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "grid grid-cols-3 gap-4",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "space-y-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                    className: "text-sm font-medium text-foreground",
+                                                    children: "Chapters"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 527,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                    type: "number",
+                                                    value: chapters,
+                                                    onChange: (e)=>setChapters(e.target.value),
+                                                    placeholder: "e.g., 12",
+                                                    min: "1",
+                                                    className: "bg-input border-border focus:border-primary focus:ring-primary"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 530,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 526,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "space-y-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                    className: "text-sm font-medium text-foreground",
+                                                    children: "Endings"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 540,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                    type: "number",
+                                                    value: endings,
+                                                    onChange: (e)=>setEndings(e.target.value),
+                                                    placeholder: "e.g., 7",
+                                                    min: "1",
+                                                    className: "bg-input border-border focus:border-primary focus:ring-primary"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 543,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 539,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "space-y-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                                    className: "text-sm font-medium text-foreground",
+                                                    children: "Play Time"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 553,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                                    value: estimatedTime,
+                                                    onChange: (e)=>setEstimatedTime(e.target.value),
+                                                    placeholder: "e.g., 2-3 hrs",
+                                                    className: "bg-input border-border focus:border-primary focus:ring-primary"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 556,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 552,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                    lineNumber: 525,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "text-sm font-medium text-foreground flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$tag$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Tag$3e$__["Tag"], {
+                                                    className: "w-4 h-4 text-primary"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 567,
+                                                    columnNumber: 19
+                                                }, this),
+                                                "Tags"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 566,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
+                                            value: tags,
+                                            onChange: (e)=>setTags(e.target.value),
+                                            placeholder: "choice-based, branching narrative, multiple endings...",
+                                            className: "bg-input border-border focus:border-primary focus:ring-primary"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 570,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-muted-foreground",
+                                            children: "Separate tags with commas"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 576,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                    lineNumber: 565,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "p-4 bg-muted/50 rounded-lg border border-border",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-sm font-medium text-foreground mb-3",
+                                            children: "Story Preview"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 583,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex gap-4",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "w-20 h-28 bg-secondary rounded-lg flex items-center justify-center overflow-hidden shrink-0",
+                                                    children: coverUrl ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                        src: coverUrl,
+                                                        alt: "Cover",
+                                                        className: "w-full h-full object-cover"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                        lineNumber: 589,
+                                                        columnNumber: 23
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$book$2d$open$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__BookOpen$3e$__["BookOpen"], {
+                                                        className: "w-8 h-8 text-muted-foreground"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                        lineNumber: 595,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 587,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "flex-1 min-w-0",
+                                                    children: [
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h4", {
+                                                            className: "font-serif font-semibold text-foreground truncate",
+                                                            children: title || 'Your Story Title'
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                            lineNumber: 599,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-muted-foreground mt-0.5",
+                                                            children: [
+                                                                "by ",
+                                                                authors.map((a)=>a.name).join(', ')
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                            lineNumber: 602,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                            className: "text-xs text-muted-foreground mt-1 line-clamp-2",
+                                                            children: description || 'Your story description will appear here...'
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                            lineNumber: 605,
+                                                            columnNumber: 21
+                                                        }, this),
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "flex flex-wrap gap-1 mt-2",
+                                                            children: selectedGenres.map((genre)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "text-xs px-2 py-0.5 bg-primary/20 text-primary rounded-full",
+                                                                    children: genre
+                                                                }, genre, false, {
+                                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                                    lineNumber: 611,
+                                                                    columnNumber: 25
+                                                                }, this))
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                            lineNumber: 609,
+                                                            columnNumber: 21
+                                                        }, this)
+                                                    ]
+                                                }, void 0, true, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 598,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 586,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                    lineNumber: 582,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex gap-3",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                            type: "button",
+                                            variant: "outline",
+                                            onClick: ()=>setStep(3),
+                                            className: "flex-1 border-border hover:bg-muted",
+                                            children: "Back"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 624,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
+                                            type: "submit",
+                                            className: "flex-1 bg-primary hover:bg-primary/90 text-primary-foreground",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$upload$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Upload$3e$__["Upload"], {
+                                                    className: "w-4 h-4 mr-2"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                                    lineNumber: 636,
+                                                    columnNumber: 19
+                                                }, this),
+                                                "Publish Story"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                            lineNumber: 632,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                                    lineNumber: 623,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/interface/web/components/create-story-model.tsx",
+                            lineNumber: 524,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                    lineNumber: 170,
+                    lineNumber: 225,
                     columnNumber: 9
-                }, this),
-                error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "mt-2 p-3 bg-destructive/10 rounded-lg border border-destructive/30",
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-xs text-destructive",
-                        children: error
-                    }, void 0, false, {
-                        fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                        lineNumber: 460,
-                        columnNumber: 13
-                    }, this)
-                }, void 0, false, {
-                    fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                    lineNumber: 459,
-                    columnNumber: 11
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20",
@@ -2205,36 +2586,37 @@ function CreateStoryModal({ isOpen, onClose, onSuccess }) {
                                 className: "w-4 h-4 shrink-0 mt-0.5"
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                                lineNumber: 465,
+                                lineNumber: 647,
                                 columnNumber: 13
                             }, this),
                             step === 1 && 'A great description helps readers discover your story. Be specific about themes and tone!',
                             step === 2 && 'Make sure your story link works and is publicly accessible before publishing.',
-                            step === 3 && 'Adding details like chapter count and endings helps readers know what to expect.'
+                            step === 3 && 'Credit everyone who contributed! You can add co-authors, artists, editors, and more.',
+                            step === 4 && 'Adding details like chapter count and endings helps readers know what to expect.'
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                        lineNumber: 464,
+                        lineNumber: 646,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-                    lineNumber: 463,
+                    lineNumber: 645,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-            lineNumber: 132,
+            lineNumber: 185,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/interface/web/components/create-story-model.tsx",
-        lineNumber: 131,
+        lineNumber: 184,
         columnNumber: 5
     }, this);
 }
-_s(CreateStoryModal, "i+Cq06bCJIrsntgGx9nsCbRXhhE=");
+_s(CreateStoryModal, "ib/QP7LhtuzWLenf5cs1VTtRCm4=");
 _c = CreateStoryModal;
 var _c;
 __turbopack_context__.k.register(_c, "CreateStoryModal");
@@ -2360,7 +2742,9 @@ function BrowsePage() {
             ];
             if (selectedGenre !== 'All Genres') {
                 result = result.filter({
-                    "BrowsePage.useMemo[filteredFictions]": (f)=>f.genre === selectedGenre
+                    "BrowsePage.useMemo[filteredFictions]": (f)=>f.genre?.split(',').map({
+                            "BrowsePage.useMemo[filteredFictions]": (g)=>g.trim()
+                        }["BrowsePage.useMemo[filteredFictions]"]).includes(selectedGenre)
                 }["BrowsePage.useMemo[filteredFictions]"]);
             }
             if (searchQuery.trim()) {
@@ -2398,7 +2782,7 @@ function BrowsePage() {
                 }
             }, void 0, false, {
                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                lineNumber: 116,
+                lineNumber: 121,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2411,20 +2795,20 @@ function BrowsePage() {
                                 className: "absolute top-0 left-1/4 w-[600px] h-[300px] bg-primary/5 blur-[120px] rounded-full"
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 135,
+                                lineNumber: 140,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-accent/5 blur-[100px] rounded-full"
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 136,
+                                lineNumber: 141,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                        lineNumber: 134,
+                        lineNumber: 139,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
@@ -2443,20 +2827,20 @@ function BrowsePage() {
                                                     className: "w-7 h-7 text-primary transition-transform group-hover:scale-110"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                    lineNumber: 144,
+                                                    lineNumber: 149,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$sparkles$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Sparkles$3e$__["Sparkles"], {
                                                     className: "w-2.5 h-2.5 text-teal-glow absolute -top-0.5 -right-0.5"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                    lineNumber: 145,
+                                                    lineNumber: 150,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 143,
+                                            lineNumber: 148,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2464,13 +2848,13 @@ function BrowsePage() {
                                             children: "ifReads"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 147,
+                                            lineNumber: 152,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                    lineNumber: 142,
+                                    lineNumber: 147,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2482,7 +2866,7 @@ function BrowsePage() {
                                             children: "Browse"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 153,
+                                            lineNumber: 158,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2491,7 +2875,7 @@ function BrowsePage() {
                                             children: "Top Rated"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 156,
+                                            lineNumber: 161,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -2500,13 +2884,13 @@ function BrowsePage() {
                                             children: "New Releases"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 162,
+                                            lineNumber: 167,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                    lineNumber: 152,
+                                    lineNumber: 157,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2520,62 +2904,46 @@ function BrowsePage() {
                                                     className: "w-4 h-4"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                    lineNumber: 175,
+                                                    lineNumber: 180,
                                                     columnNumber: 17
                                                 }, this),
                                                 "Add Story"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 171,
+                                            lineNumber: 176,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                             href: "/profile",
                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                                variant: "ghost",
-                                                className: "text-foreground hover:text-primary hover:bg-primary/10",
+                                                className: "bg-primary/90 text-primary-foreground hover:bg-primary",
                                                 children: "Profile"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 179,
+                                                lineNumber: 184,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 178,
-                                            columnNumber: 15
-                                        }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                                            href: "/profile?tab=settings",
-                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
-                                                className: "bg-primary/90 text-primary-foreground hover:bg-primary",
-                                                children: "My Account"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 187,
-                                                columnNumber: 17
-                                            }, this)
-                                        }, void 0, false, {
-                                            fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                            lineNumber: 186,
+                                            lineNumber: 183,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                    lineNumber: 170,
+                                    lineNumber: 175,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                            lineNumber: 141,
+                            lineNumber: 146,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                        lineNumber: 140,
+                        lineNumber: 145,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
@@ -2589,7 +2957,7 @@ function BrowsePage() {
                                         children: "Browse Interactive Fiction"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                        lineNumber: 199,
+                                        lineNumber: 196,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2597,13 +2965,13 @@ function BrowsePage() {
                                         children: "Discover stories where your choices matter"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                        lineNumber: 202,
+                                        lineNumber: 199,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 198,
+                                lineNumber: 195,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2616,7 +2984,7 @@ function BrowsePage() {
                                                 className: "absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 211,
+                                                lineNumber: 208,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -2627,13 +2995,13 @@ function BrowsePage() {
                                                 className: "pl-10 bg-secondary/50 border-border/50 focus:border-primary/50 text-foreground placeholder:text-muted-foreground"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 212,
+                                                lineNumber: 209,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                        lineNumber: 210,
+                                        lineNumber: 207,
                                         columnNumber: 13
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2651,7 +3019,7 @@ function BrowsePage() {
                                                                     className: "w-4 h-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                                    lineNumber: 229,
+                                                                    lineNumber: 226,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 selectedGenre,
@@ -2659,18 +3027,18 @@ function BrowsePage() {
                                                                     className: "w-4 h-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                                    lineNumber: 231,
+                                                                    lineNumber: 228,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                            lineNumber: 225,
+                                                            lineNumber: 222,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                        lineNumber: 224,
+                                                        lineNumber: 221,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -2681,18 +3049,18 @@ function BrowsePage() {
                                                                 children: genre
                                                             }, genre, false, {
                                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                                lineNumber: 236,
+                                                                lineNumber: 233,
                                                                 columnNumber: 21
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                        lineNumber: 234,
+                                                        lineNumber: 231,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 223,
+                                                lineNumber: 220,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenu"], {
@@ -2707,7 +3075,7 @@ function BrowsePage() {
                                                                     className: "w-4 h-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                                    lineNumber: 258,
+                                                                    lineNumber: 255,
                                                                     columnNumber: 21
                                                                 }, this),
                                                                 currentSort.label,
@@ -2715,18 +3083,18 @@ function BrowsePage() {
                                                                     className: "w-4 h-4"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                                    lineNumber: 260,
+                                                                    lineNumber: 257,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                            lineNumber: 254,
+                                                            lineNumber: 251,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                        lineNumber: 253,
+                                                        lineNumber: 250,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$dropdown$2d$menu$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DropdownMenuContent"], {
@@ -2739,25 +3107,25 @@ function BrowsePage() {
                                                                         className: "w-4 h-4 mr-2"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                                        lineNumber: 274,
+                                                                        lineNumber: 271,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     option.label
                                                                 ]
                                                             }, option.value, true, {
                                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                                lineNumber: 265,
+                                                                lineNumber: 262,
                                                                 columnNumber: 21
                                                             }, this))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                        lineNumber: 263,
+                                                        lineNumber: 260,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 252,
+                                                lineNumber: 249,
                                                 columnNumber: 15
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2770,12 +3138,12 @@ function BrowsePage() {
                                                             className: "w-4 h-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                            lineNumber: 291,
+                                                            lineNumber: 288,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                        lineNumber: 283,
+                                                        lineNumber: 280,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2785,30 +3153,30 @@ function BrowsePage() {
                                                             className: "w-4 h-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                            lineNumber: 301,
+                                                            lineNumber: 298,
                                                             columnNumber: 19
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                        lineNumber: 293,
+                                                        lineNumber: 290,
                                                         columnNumber: 17
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 282,
+                                                lineNumber: 279,
                                                 columnNumber: 15
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                        lineNumber: 221,
+                                        lineNumber: 218,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 208,
+                                lineNumber: 205,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2819,12 +3187,12 @@ function BrowsePage() {
                                         children: genre
                                     }, genre, false, {
                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                        lineNumber: 310,
+                                        lineNumber: 307,
                                         columnNumber: 15
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 308,
+                                lineNumber: 305,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2837,7 +3205,7 @@ function BrowsePage() {
                                         children: filteredFictions.length
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                        lineNumber: 331,
+                                        lineNumber: 328,
                                         columnNumber: 13
                                     }, this),
                                     ' ',
@@ -2851,7 +3219,7 @@ function BrowsePage() {
                                                 children: selectedGenre
                                             }, void 0, false, {
                                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                                lineNumber: 338,
+                                                lineNumber: 335,
                                                 columnNumber: 20
                                             }, this)
                                         ]
@@ -2859,7 +3227,7 @@ function BrowsePage() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 329,
+                                lineNumber: 326,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2869,14 +3237,14 @@ function BrowsePage() {
                                     children: "Carregando..."
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                    lineNumber: 352,
+                                    lineNumber: 349,
                                     columnNumber: 15
                                 }, this) : filteredFictions.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "col-span-full text-center py-12 text-muted-foreground",
                                     children: "Nenhuma ficção encontrada."
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                    lineNumber: 356,
+                                    lineNumber: 353,
                                     columnNumber: 15
                                 }, this) : filteredFictions.map((f)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$story$2d$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["StoryCard"], {
                                         viewMode: viewMode,
@@ -2892,12 +3260,12 @@ function BrowsePage() {
                                         }
                                     }, f.id, false, {
                                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                        lineNumber: 361,
+                                        lineNumber: 358,
                                         columnNumber: 17
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 344,
+                                lineNumber: 341,
                                 columnNumber: 11
                             }, this),
                             hasMore && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2910,24 +3278,24 @@ function BrowsePage() {
                                     children: "Load More Stories"
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                    lineNumber: 378,
+                                    lineNumber: 375,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                                lineNumber: 377,
+                                lineNumber: 374,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                        lineNumber: 196,
+                        lineNumber: 193,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/interface/web/app/browse/page.tsx",
-                lineNumber: 132,
+                lineNumber: 137,
                 columnNumber: 7
             }, this)
         ]

@@ -11,8 +11,14 @@ import {
   Edit3,
   ChevronRight,
   Plus,
+  BookMarked,
+  ExternalLink,
+  MoreVertical,
+  Trash2,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -26,6 +32,14 @@ import {
 } from '@/app/api/middleware/users';
 import { CreateStoryModal } from '../../components/create-story-model';
 import { useRouter } from 'next/navigation';
+import { EditStoryModal } from '../../components/edit-story-modal';
+import { type Fiction, fictionsApi } from '@/app/api/fictions';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@radix-ui/react-dropdown-menu';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -35,18 +49,38 @@ export default function ProfilePage() {
   const [favorites, setFavorites] = useState<FavoriteEntry[]>([]);
   const [reviews, setReviews] = useState<ReviewWithFiction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingStory, setEditingStory] = useState<Fiction | null>(null);
+  const [myStories, setMyStories] = useState<Fiction[]>([]);
+
+  const handleEditStory = (story: Fiction) => {
+    setEditingStory(story);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveStory = (updatedStory: Fiction) => {
+    setMyStories((prev) =>
+      prev.map((s) => (s.id === updatedStory.id ? updatedStory : s)),
+    );
+  };
+
+  const handleDeleteStory = (storyId: number) => {
+    setMyStories((prev) => prev.filter((s) => s.id !== storyId));
+  };
 
   useEffect(() => {
     void (async () => {
       try {
-        const [me, favs, revs] = await Promise.all([
+        const [me, favs, revs, stories] = await Promise.all([
           usersApi.getMe(),
           usersApi.getFavorites(),
           usersApi.getMyReviews(),
+          fictionsApi.findMine(),
         ]);
         setUser(me);
         setFavorites(favs);
         setReviews(revs);
+        setMyStories(stories);
       } catch {
         router.replace('/');
       } finally {
@@ -67,7 +101,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <p className="text-muted-foreground">
-          Você precisa estar logado para ver o perfil.
+          You need to be logged in to edit your profile.
         </p>
       </div>
     );
@@ -88,6 +122,16 @@ export default function ProfilePage() {
       <CreateStoryModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
+      />
+      <EditStoryModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingStory(null);
+        }}
+        fiction={editingStory}
+        onSaved={handleSaveStory}
+        onDeleted={handleDeleteStory}
       />
       <div className="min-h-screen bg-background">
         {/* Header */}
@@ -138,7 +182,7 @@ export default function ProfilePage() {
                   </h1>
                   <p className="text-muted-foreground">{user.email}</p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Membro desde {joinedDate}
+                    Member since {joinedDate}
                   </p>
                 </div>
                 <Button
@@ -177,6 +221,13 @@ export default function ProfilePage() {
           >
             <TabsList className="bg-card border border-border w-full justify-start overflow-x-auto">
               <TabsTrigger
+                value="mystories"
+                className="flex items-center gap-2"
+              >
+                <BookMarked className="h-4 w-4" />
+                My Stories
+              </TabsTrigger>
+              <TabsTrigger
                 value="favorites"
                 className="flex items-center gap-2"
               >
@@ -192,6 +243,166 @@ export default function ProfilePage() {
                 Settings
               </TabsTrigger>
             </TabsList>
+
+            {/* My Stories Tab */}
+            <TabsContent value="mystories" className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-serif font-semibold">
+                  Stories You Own
+                </h2>
+                <div className="flex items-center gap-3">
+                  <p className="text-sm text-muted-foreground">
+                    {myStories.length} stories
+                  </p>
+                  <Button
+                    onClick={() => setIsCreateModalOpen(true)}
+                    size="sm"
+                    className="gap-2 bg-primary hover:bg-primary/90"
+                  >
+                    <Plus className="w-4 h-4" />
+                    New Story
+                  </Button>
+                </div>
+              </div>
+              {myStories.length > 0 ? (
+                <div className="space-y-4">
+                  {myStories.map((story) => (
+                    <Card
+                      key={story.id}
+                      className="bg-card/50 border-border hover:border-primary/30 transition-colors"
+                    >
+                      <CardContent className="p-5">
+                        <div className="flex gap-4">
+                          {/* Cover */}
+                          <div className="w-20 h-28 bg-linear-to-br from-primary/30 to-accent/30 rounded-lg flex items-center justify-center shrink-0">
+                            <BookOpen className="h-8 w-8 text-primary/70" />
+                          </div>
+
+                          {/* Info */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <Link
+                                  href={`/story/${story.id}`}
+                                  className="hover:text-primary transition-colors"
+                                >
+                                  <h3 className="font-serif font-semibold text-lg text-foreground">
+                                    {story.title}
+                                  </h3>
+                                </Link>
+                                <div className="flex items-center gap-2 mt-1">
+                                  {(
+                                    story.genre
+                                      ?.split(',')
+                                      .map((g) => g.trim())
+                                      .filter(Boolean) ?? []
+                                  ).map((genre) => (
+                                    <Badge
+                                      key={genre}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {genre}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Actions Dropdown */}
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                  >
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                  align="end"
+                                  className="bg-card border-border"
+                                >
+                                  <DropdownMenuItem
+                                    onClick={() => handleEditStory(story)}
+                                    className="cursor-pointer"
+                                  >
+                                    <Edit3 className="h-4 w-4 mr-2" />
+                                    Edit Story
+                                  </DropdownMenuItem>
+                                  {story.link && (
+                                    <DropdownMenuItem asChild>
+                                      <Link
+                                        href={story.link}
+                                        target="_blank"
+                                        className="cursor-pointer"
+                                      >
+                                        <ExternalLink className="h-4 w-4 mr-2" />
+                                        View Live
+                                      </Link>
+                                    </DropdownMenuItem>
+                                  )}
+                                  <DropdownMenuItem
+                                    onClick={() => handleEditStory(story)}
+                                    className="cursor-pointer text-destructive focus:text-destructive"
+                                  >
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+
+                            <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
+                              {story.description}
+                            </p>
+
+                            {/* Authors */}
+                            {(story.authors?.length ?? 0) > 1 && (
+                              <div className="flex items-center gap-2 mt-3">
+                                <Users className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-xs text-muted-foreground">
+                                  {story.authors?.length} contributors:{' '}
+                                  {(story.authors ?? [])
+                                    .map((a) => a.name)
+                                    .join(', ')}
+                                </span>
+                              </div>
+                            )}
+
+                            {/* Last Updated */}
+                            <p className="text-xs text-muted-foreground mt-2">
+                              Last updated:{' '}
+                              {new Date(story.updatedAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <Card className="bg-card/50 border-border">
+                  <CardContent className="flex flex-col items-center justify-center py-12">
+                    <BookMarked className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                    <h3 className="text-lg font-medium text-foreground mb-2">
+                      No stories yet
+                    </h3>
+                    <p className="text-muted-foreground text-center max-w-md mb-4">
+                      Share your interactive fiction with the world. Create your
+                      first story and let others experience your narrative.
+                    </p>
+                    <Button
+                      onClick={() => setIsCreateModalOpen(true)}
+                      className="gap-2"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Create Your First Story
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
 
             {/* Favorites Tab */}
             <TabsContent value="favorites" className="space-y-6">
@@ -297,11 +508,11 @@ export default function ProfilePage() {
                               </p>
                             )}
                             <div className="flex gap-4 mt-2 text-xs text-muted-foreground">
-                              <span>Narrativa: {review.narrative}/5</span>
+                              <span>Narrative: {review.narrative}/5</span>
                               <span>
-                                Interatividade: {review.interactivity}/5
+                                Interactivity: {review.interactivity}/5
                               </span>
-                              <span>Originalidade: {review.originality}/5</span>
+                              <span>Originality: {review.originality}/5</span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
@@ -325,11 +536,11 @@ export default function ProfilePage() {
                   <CardContent className="flex flex-col items-center justify-center py-12">
                     <MessageSquare className="h-12 w-12 text-muted-foreground/50 mb-4" />
                     <h3 className="text-lg font-medium text-foreground mb-2">
-                      Nenhuma review ainda
+                      No review yet
                     </h3>
                     <p className="text-muted-foreground text-center max-w-md mb-4">
-                      Leia e avalie ficções interativas para ver suas reviews
-                      aqui.
+                      Read and review interactive fictions to see your reviews
+                      here.
                     </p>
                     <Link href="/browse">
                       <Button>Browse Stories</Button>
@@ -346,7 +557,6 @@ export default function ProfilePage() {
                   name: user.name,
                   username: user.name,
                   email: user.email,
-                  bio: '',
                 }}
               />
             </TabsContent>

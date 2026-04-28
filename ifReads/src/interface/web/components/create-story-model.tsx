@@ -17,13 +17,30 @@ import {
   Link as LinkIcon,
   ImageIcon,
   Tag,
+  Plus,
+  Users,
+  Trash2,
+  UserPlus,
 } from 'lucide-react';
 import { fictionsApi } from '@/app/api/fictions';
+import { authorsApi } from '@/app/api/authors';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
 
 interface CreateStoryModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+}
+interface Author {
+  id: string;
+  name: string;
+  role: string;
 }
 
 const GENRES = [
@@ -52,6 +69,18 @@ const PLATFORMS = [
   'Other',
 ];
 
+const AUTHOR_ROLES = [
+  { value: 'main_author', label: 'Main Author' },
+  { value: 'co_author', label: 'Co-Author' },
+  { value: 'writer', label: 'Writer' },
+  { value: 'editor', label: 'Editor' },
+  { value: 'artist', label: 'Artist' },
+  { value: 'programmer', label: 'Programmer' },
+  { value: 'composer', label: 'Composer' },
+  { value: 'beta_tester', label: 'Beta Tester' },
+  { value: 'contributor', label: 'Contributor' },
+];
+
 export function CreateStoryModal({
   isOpen,
   onClose,
@@ -70,6 +99,11 @@ export function CreateStoryModal({
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [authors, setAuthors] = useState<Author[]>([
+    { id: '1', name: 'You', role: 'main_author' },
+  ]);
+  const [newAuthorName, setNewAuthorName] = useState('');
+  const [newAuthorRole, setNewAuthorRole] = useState('co_author');
 
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
@@ -81,18 +115,57 @@ export function CreateStoryModal({
     );
   };
 
+  const addAuthor = () => {
+    if (newAuthorName.trim()) {
+      setAuthors((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          name: newAuthorName.trim(),
+          role: newAuthorRole,
+        },
+      ]);
+      setNewAuthorName('');
+      setNewAuthorRole('co_author');
+    }
+  };
+
+  const removeAuthor = (id: string) => {
+    if (authors[0]?.id === id) return;
+    setAuthors((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const updateAuthorRole = (id: string, role: string) => {
+    setAuthors((prev) => prev.map((a) => (a.id === id ? { ...a, role } : a)));
+  };
+
+  const getRoleLabel = (roleValue: string) => {
+    return AUTHOR_ROLES.find((r) => r.value === roleValue)?.label || roleValue;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      await fictionsApi.create({
+      const created = await fictionsApi.create({
         title: title.trim(),
         link: storyUrl.trim(),
         description: description.trim() || undefined,
         genre:
           selectedGenres.length > 0 ? selectedGenres.join(', ') : undefined,
       });
+      // Add extra authors (skip first entry which is "You" / main_author)
+      const extraAuthors = authors.slice(1);
+      for (const author of extraAuthors) {
+        const role =
+          author.role === 'main_author'
+            ? 'main_author'
+            : author.role === 'co_author' || author.role === 'coauthor'
+              ? 'coauthor'
+              : 'collaborator';
+        await authorsApi.create(created.id, { name: author.name, role });
+      }
       onClose();
       resetForm();
       onSuccess?.();
@@ -120,6 +193,9 @@ export function CreateStoryModal({
     setEstimatedTime('');
     setTags('');
     setStep(1);
+    setAuthors([{ id: '1', name: 'You', role: 'main_author' }]);
+    setNewAuthorName('');
+    setNewAuthorRole('co_author');
     setError(null);
   };
 
@@ -139,13 +215,15 @@ export function CreateStoryModal({
               ? 'Create Your Story'
               : step === 2
                 ? 'Story Details'
-                : 'Final Touches'}
+                : step === 3
+                  ? 'Authors & Credits'
+                  : 'Final Touches'}
           </DialogTitle>
         </DialogHeader>
 
         {/* Progress Steps */}
         <div className="flex items-center gap-2 py-4">
-          {[1, 2, 3].map((s) => (
+          {[1, 2, 3, 4].map((s) => (
             <div key={s} className="flex items-center gap-2 flex-1">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
@@ -156,7 +234,7 @@ export function CreateStoryModal({
               >
                 {s}
               </div>
-              {s < 3 && (
+              {s < 4 && (
                 <div
                   className={`flex-1 h-1 rounded transition-colors ${
                     s < step ? 'bg-primary' : 'bg-muted'
@@ -328,8 +406,144 @@ export function CreateStoryModal({
             </div>
           )}
 
-          {/* Step 3: Final Details */}
+          {/* Step 3: Authors & Credits */}
           {step === 3 && (
+            <div className="space-y-5">
+              <div className="space-y-3">
+                <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                  <Users className="w-4 h-4 text-primary" />
+                  Authors & Contributors
+                </label>
+                <p className="text-xs text-muted-foreground">
+                  Add all the people who contributed to this story. You can
+                  assign different roles to each contributor.
+                </p>
+              </div>
+
+              {/* Current Authors List */}
+              <div className="space-y-2">
+                {authors.map((author, index) => (
+                  <div
+                    key={author.id}
+                    className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                      <span className="text-sm font-medium text-primary">
+                        {author.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground truncate">
+                        {author.name}
+                        {index === 0 && (
+                          <span className="text-xs text-muted-foreground ml-2">
+                            (You)
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <Select
+                      value={author.role}
+                      onValueChange={(value) =>
+                        updateAuthorRole(author.id, value)
+                      }
+                    >
+                      <SelectTrigger className="w-36 bg-input border-border">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-card border-border">
+                        {AUTHOR_ROLES.map((role) => (
+                          <SelectItem key={role.value} value={role.value}>
+                            {role.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {index !== 0 && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeAuthor(author.id)}
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Add New Author */}
+              <div className="p-4 bg-secondary/30 rounded-lg border border-dashed border-border">
+                <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
+                  <UserPlus className="w-4 h-4 text-primary" />
+                  Add Another Author
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    value={newAuthorName}
+                    onChange={(e) => setNewAuthorName(e.target.value)}
+                    placeholder="Author name..."
+                    className="flex-1 bg-input border-border focus:border-primary focus:ring-primary"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addAuthor();
+                      }
+                    }}
+                  />
+                  <Select
+                    value={newAuthorRole}
+                    onValueChange={setNewAuthorRole}
+                  >
+                    <SelectTrigger className="w-36 bg-input border-border">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card border-border">
+                      {AUTHOR_ROLES.filter(
+                        (r) => r.value !== 'main_author',
+                      ).map((role) => (
+                        <SelectItem key={role.value} value={role.value}>
+                          {role.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    type="button"
+                    onClick={addAuthor}
+                    disabled={!newAuthorName.trim()}
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setStep(2)}
+                  className="flex-1 border-border hover:bg-muted"
+                >
+                  Back
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => setStep(4)}
+                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
+                  Continue
+                  <Sparkles className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Final Details */}
+          {step === 4 && (
             <div className="space-y-5">
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
@@ -408,6 +622,9 @@ export function CreateStoryModal({
                     <h4 className="font-serif font-semibold text-foreground truncate">
                       {title || 'Your Story Title'}
                     </h4>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      by {authors.map((a) => a.name).join(', ')}
+                    </p>
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                       {description ||
                         'Your story description will appear here...'}
@@ -430,24 +647,17 @@ export function CreateStoryModal({
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => setStep(2)}
+                  onClick={() => setStep(3)}
                   className="flex-1 border-border hover:bg-muted"
                 >
                   Back
                 </Button>
                 <Button
                   type="submit"
-                  disabled={loading}
                   className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
                 >
-                  {loading ? (
-                    'Publicando...'
-                  ) : (
-                    <>
-                      <Upload className="w-4 h-4 mr-2" />
-                      Publish Story
-                    </>
-                  )}
+                  <Upload className="w-4 h-4 mr-2" />
+                  Publish Story
                 </Button>
               </div>
             </div>
@@ -455,11 +665,6 @@ export function CreateStoryModal({
         </form>
 
         {/* Tips */}
-        {error && (
-          <div className="mt-2 p-3 bg-destructive/10 rounded-lg border border-destructive/30">
-            <p className="text-xs text-destructive">{error}</p>
-          </div>
-        )}
         <div className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/20">
           <p className="text-xs text-primary flex items-start gap-2">
             <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
@@ -468,6 +673,8 @@ export function CreateStoryModal({
             {step === 2 &&
               'Make sure your story link works and is publicly accessible before publishing.'}
             {step === 3 &&
+              'Credit everyone who contributed! You can add co-authors, artists, editors, and more.'}
+            {step === 4 &&
               'Adding details like chapter count and endings helps readers know what to expect.'}
           </p>
         </div>

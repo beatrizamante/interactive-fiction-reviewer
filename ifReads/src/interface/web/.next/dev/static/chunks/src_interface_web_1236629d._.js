@@ -441,6 +441,10 @@ const usersApi = {
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$app$2f$api$2f$client$2f$axiosClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].patch('/users/me', data);
         return response.data;
     },
+    changePassword: async (data)=>{
+        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$app$2f$api$2f$client$2f$axiosClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].patch('/users/me/password', data);
+        return response.data;
+    },
     getFavorites: async ()=>{
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$app$2f$api$2f$client$2f$axiosClient$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["apiClient"].get('/users/me/favorites');
         return response.data;
@@ -505,8 +509,10 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                 setIsFav(true);
                 onToggleFavorite?.(fictionId, true);
             }
-        } catch  {
-        // 401 = não autenticado, ignorar silenciosamente
+        } catch (err) {
+            if (err?.response?.status !== 401) {
+                console.error('[StoryCard] favorite toggle failed:', err?.response?.data ?? err?.message ?? err);
+            }
         } finally{
             setFavLoading(false);
         }
@@ -523,7 +529,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             className: "absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 68,
+                            lineNumber: 73,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -532,18 +538,18 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                 className: "w-10 h-10 text-primary/40"
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 70,
+                                lineNumber: 75,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 69,
+                            lineNumber: 74,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                    lineNumber: 67,
+                    lineNumber: 72,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -562,7 +568,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                     children: story.genre
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                    lineNumber: 79,
+                                                    lineNumber: 84,
                                                     columnNumber: 17
                                                 }, this),
                                                 story.rating !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -572,7 +578,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                             className: "w-3.5 h-3.5 fill-primary text-primary"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                            lineNumber: 84,
+                                                            lineNumber: 89,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -580,7 +586,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                             children: story.rating
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                            lineNumber: 85,
+                                                            lineNumber: 90,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -591,19 +597,19 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                            lineNumber: 88,
+                                                            lineNumber: 93,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                                    lineNumber: 83,
+                                                    lineNumber: 88,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 78,
+                                            lineNumber: 83,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -611,7 +617,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             children: story.title
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 92,
+                                            lineNumber: 97,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -624,13 +630,13 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 95,
+                                            lineNumber: 100,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 77,
+                                    lineNumber: 82,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -643,18 +649,18 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: `w-5 h-5 transition-colors ${isFav ? 'fill-primary text-primary' : ''}`
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 110,
+                                        lineNumber: 115,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 103,
+                                    lineNumber: 108,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 76,
+                            lineNumber: 81,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -662,7 +668,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             children: story.description
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 116,
+                            lineNumber: 121,
                             columnNumber: 11
                         }, this),
                         (story.playTime || story.wordCount || story.tags?.length) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -675,14 +681,14 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             className: "w-3.5 h-3.5"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 124,
+                                            lineNumber: 129,
                                             columnNumber: 19
                                         }, this),
                                         story.playTime
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 123,
+                                    lineNumber: 128,
                                     columnNumber: 17
                                 }, this),
                                 story.wordCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -692,7 +698,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             className: "w-3.5 h-3.5"
                                         }, void 0, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 130,
+                                            lineNumber: 135,
                                             columnNumber: 19
                                         }, this),
                                         (story.wordCount / 1000).toFixed(0),
@@ -700,7 +706,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 129,
+                                    lineNumber: 134,
                                     columnNumber: 17
                                 }, this),
                                 story.tags && story.tags.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -710,30 +716,30 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                             children: tag
                                         }, tag, false, {
                                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                            lineNumber: 137,
+                                            lineNumber: 142,
                                             columnNumber: 21
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                    lineNumber: 135,
+                                    lineNumber: 140,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 121,
+                            lineNumber: 126,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/interface/web/components/story-card.tsx",
-                    lineNumber: 75,
+                    lineNumber: 80,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/interface/web/components/story-card.tsx",
-            lineNumber: 62,
+            lineNumber: 67,
             columnNumber: 7
         }, this);
     }
@@ -748,7 +754,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         className: "absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 160,
+                        lineNumber: 165,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -757,12 +763,12 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             className: "w-12 h-12 text-primary/40"
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 162,
+                            lineNumber: 167,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 161,
+                        lineNumber: 166,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -775,18 +781,18 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                             className: `w-4 h-4 transition-colors ${isFav ? 'fill-primary text-primary' : ''}`
                         }, void 0, false, {
                             fileName: "[project]/src/interface/web/components/story-card.tsx",
-                            lineNumber: 173,
+                            lineNumber: 178,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 166,
+                        lineNumber: 171,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                lineNumber: 159,
+                lineNumber: 164,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -800,7 +806,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                 children: story.genre
                             }, void 0, false, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 182,
+                                lineNumber: 187,
                                 columnNumber: 11
                             }, this),
                             story.rating !== undefined && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -810,7 +816,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: "w-3 h-3 fill-primary text-primary"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 187,
+                                        lineNumber: 192,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -818,7 +824,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         children: story.rating
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 188,
+                                        lineNumber: 193,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -829,19 +835,19 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 191,
+                                        lineNumber: 196,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 186,
+                                lineNumber: 191,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 181,
+                        lineNumber: 186,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -849,7 +855,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         children: story.title
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 196,
+                        lineNumber: 201,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -862,7 +868,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 200,
+                        lineNumber: 205,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -870,7 +876,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                         children: story.description
                     }, void 0, false, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 208,
+                        lineNumber: 213,
                         columnNumber: 9
                     }, this),
                     (story.playTime || story.wordCount) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -883,14 +889,14 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: "w-3 h-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 216,
+                                        lineNumber: 221,
                                         columnNumber: 17
                                     }, this),
                                     story.playTime
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 215,
+                                lineNumber: 220,
                                 columnNumber: 15
                             }, this),
                             story.wordCount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$interface$2f$web$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -900,7 +906,7 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                         className: "w-3 h-3"
                                     }, void 0, false, {
                                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                        lineNumber: 222,
+                                        lineNumber: 227,
                                         columnNumber: 17
                                     }, this),
                                     (story.wordCount / 1000).toFixed(0),
@@ -908,25 +914,25 @@ function StoryCard({ story, viewMode = 'grid', initialFavorited = false, onToggl
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                                lineNumber: 221,
+                                lineNumber: 226,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/interface/web/components/story-card.tsx",
-                        lineNumber: 213,
+                        lineNumber: 218,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/interface/web/components/story-card.tsx",
-                lineNumber: 180,
+                lineNumber: 185,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/interface/web/components/story-card.tsx",
-        lineNumber: 154,
+        lineNumber: 159,
         columnNumber: 5
     }, this);
 }

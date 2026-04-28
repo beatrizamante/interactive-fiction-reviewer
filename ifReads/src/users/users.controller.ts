@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-users.dto.js';
+import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
 import { CurrentUser } from '../auth/current-user.decorator.js';
 import * as jwtPayloadInterface from '../auth/jwt-payload.interface.js';
@@ -41,6 +42,16 @@ export class UsersController {
     @Body() dto: UpdateUserDto,
   ) {
     return this.usersService.updateMe(user.sub, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('me/password')
+  @HttpCode(HttpStatus.OK)
+  changePassword(
+    @CurrentUser() user: jwtPayloadInterface.JwtPayload,
+    @Body() dto: ChangePasswordDto,
+  ) {
+    return this.usersService.changePassword(user.sub, dto);
   }
 
   @UseGuards(JwtAuthGuard)

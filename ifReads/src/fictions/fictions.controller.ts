@@ -30,6 +30,12 @@ export class FictionsController {
     return this.fictionService.create(dto, user.sub);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('mine')
+  findMine(@CurrentUser() user: jwtPayloadInterface.JwtPayload) {
+    return this.fictionService.findMine(user.sub);
+  }
+
   @Get()
   findAll(@Query('page') page?: string, @Query('limit') limit?: string) {
     return this.fictionService.findAll(

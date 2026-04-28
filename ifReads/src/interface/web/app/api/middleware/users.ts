@@ -62,6 +62,14 @@ export const usersApi = {
     return response.data;
   },
 
+  changePassword: async (data: {
+    currentPassword: string;
+    newPassword: string;
+  }): Promise<{ message: string }> => {
+    const response = await apiClient.patch('/users/me/password', data);
+    return response.data;
+  },
+
   getFavorites: async (): Promise<FavoriteEntry[]> => {
     const response = await apiClient.get('/users/me/favorites');
     return response.data;

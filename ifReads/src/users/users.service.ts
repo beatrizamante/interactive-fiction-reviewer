@@ -2,9 +2,12 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto.js';
+import { ChangePasswordDto } from './dto/change-password.dto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
@@ -78,6 +81,26 @@ export class UsersService {
         updatedAt: true,
       },
     });
+  }
+
+  async changePassword(userId: number, dto: ChangePasswordDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) throw new NotFoundException('Usuário não encontrado');
+
+    const valid = await bcrypt.compare(dto.currentPassword, user.password);
+    if (!valid) throw new UnauthorizedException('Senha atual incorreta');
+
+    const hashed = await bcrypt.hash(dto.newPassword, 10);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashed },
+    });
+
+    return { message: 'Senha atualizada com sucesso' };
   }
 
   async getFavorites(userId: number) {

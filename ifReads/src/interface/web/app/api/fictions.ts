@@ -10,6 +10,17 @@ const FictionSchema = z.object({
   link: z.string().nullable(),
   authorId: z.number(),
   author: z.object({ id: z.number(), name: z.string() }),
+  authors: z
+    .array(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        role: z.string(),
+        fictionId: z.number().optional(),
+        createdAt: z.string().optional(),
+      }),
+    )
+    .optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -67,5 +78,10 @@ export const fictionsApi = {
 
   remove: async (id: number): Promise<void> => {
     await apiClient.delete(`/fiction/${id}`);
+  },
+
+  findMine: async (): Promise<Fiction[]> => {
+    const response = await apiClient.get('/fiction/mine');
+    return response.data;
   },
 };

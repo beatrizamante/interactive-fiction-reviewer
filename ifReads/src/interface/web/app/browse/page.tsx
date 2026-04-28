@@ -88,7 +88,12 @@ export default function BrowsePage() {
   const filteredFictions = useMemo(() => {
     let result = [...fictions];
     if (selectedGenre !== 'All Genres') {
-      result = result.filter((f) => f.genre === selectedGenre);
+      result = result.filter((f) =>
+        f.genre
+          ?.split(',')
+          .map((g) => g.trim())
+          .includes(selectedGenre),
+      );
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -132,8 +137,8 @@ export default function BrowsePage() {
       <div className="min-h-screen bg-background">
         {/* Background effects */}
         <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[300px] bg-primary/5 blur-[120px] rounded-full" />
-          <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-accent/5 blur-[100px] rounded-full" />
+          <div className="absolute top-0 left-1/4 w-150 h-75 bg-primary/5 blur-[120px] rounded-full" />
+          <div className="absolute bottom-1/4 right-0 w-100 h-100 bg-accent/5 blur-[100px] rounded-full" />
         </div>
 
         {/* Header */}
@@ -342,11 +347,11 @@ export default function BrowsePage() {
           >
             {loading ? (
               <div className="col-span-full text-center py-12 text-muted-foreground">
-                Carregando...
+                Loading...
               </div>
             ) : filteredFictions.length === 0 ? (
               <div className="col-span-full text-center py-12 text-muted-foreground">
-                Nenhuma ficção encontrada.
+                No fiction found.
               </div>
             ) : (
               filteredFictions.map((f) => (
