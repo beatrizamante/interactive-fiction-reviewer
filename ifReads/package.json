@@ -21,12 +21,15 @@
     "test:db": "vitest --config ./test/integration/db/vitest-db.config.ts",
     "test:e2e": "vitest --config ./test/e2e/vitest-e2e.config.ts",
     "test:all": "vitest --config vitest.config.ts && vitest --config ./test/integration/db/vitest-db.config.ts && vitest --config ./test/e2e/vitest-e2e.config.ts",
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "start:web": "npm --prefix src/interface/web run dev",
+    "start:all": "concurrently \"npm run start:dev\" \"npm run start:web\""
   },
   "prisma": {
     "seed": "npm run seed"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/static": "^9.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.3",

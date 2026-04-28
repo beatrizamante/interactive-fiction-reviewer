@@ -20,7 +20,7 @@ export class JwtAuthGuard implements CanActivate {
     const request = context
       .switchToHttp()
       .getRequest<FastifyRequest & { user: JwtPayload }>();
-    const token = this.extractTokenFromHeader(request);
+    const token = this.extractToken(request);
 
     if (!token) {
       throw new UnauthorizedException('Token não fornecido');
@@ -38,9 +38,14 @@ export class JwtAuthGuard implements CanActivate {
     return true;
   }
 
-  private extractTokenFromHeader(
+  private extractToken(
     request: FastifyRequest & { user?: JwtPayload },
   ): string | undefined {
+    const cookie = (request.cookies as Record<string, string> | undefined)?.[
+      'access_token'
+    ];
+    if (cookie) return cookie;
+
     const [type, token] = request.headers?.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }

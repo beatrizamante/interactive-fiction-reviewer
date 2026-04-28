@@ -1,31 +1,31 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { BookOpen, Star, Clock, FileText, Heart } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Link from 'next/link';
+import { BookOpen, Star, Clock, FileText, Heart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Story {
-  id: string
-  title: string
-  author: { id: string; name: string }
-  genre: string
-  rating: number
-  reviewCount: number
-  description: string
-  wordCount: number
-  playTime: string
-  tags: string[]
+  id: string;
+  title: string;
+  author: { id: string; name: string };
+  genre: string;
+  rating?: number;
+  reviewCount?: number;
+  description: string;
+  wordCount?: number;
+  playTime?: string;
+  tags?: string[];
 }
 
 interface StoryCardProps {
-  story: Story
-  viewMode?: "grid" | "list"
+  story: Story;
+  viewMode?: 'grid' | 'list';
 }
 
-export function StoryCard({ story, viewMode = "grid" }: StoryCardProps) {
-  if (viewMode === "list") {
+export function StoryCard({ story, viewMode = 'grid' }: StoryCardProps) {
+  if (viewMode === 'list') {
     return (
-      <Link 
+      <Link
         href={`/story/${story.id}`}
         className="group flex gap-6 p-5 rounded-2xl bg-card border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5"
       >
@@ -45,16 +45,20 @@ export function StoryCard({ story, viewMode = "grid" }: StoryCardProps) {
                 <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
                   {story.genre}
                 </span>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Star className="w-3.5 h-3.5 fill-primary text-primary" />
-                  <span className="text-foreground font-medium">{story.rating}</span>
-                  <span>({story.reviewCount})</span>
-                </div>
+                {story.rating !== undefined && (
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <Star className="w-3.5 h-3.5 fill-primary text-primary" />
+                    <span className="text-foreground font-medium">
+                      {story.rating}
+                    </span>
+                    <span>({story.reviewCount ?? 0})</span>
+                  </div>
+                )}
               </div>
               <h3 className="text-xl font-serif font-semibold text-foreground group-hover:text-primary transition-colors">
                 {story.title}
               </h3>
-              <Link 
+              <Link
                 href={`/author/${story.author.id}`}
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 onClick={(e) => e.stopPropagation()}
@@ -67,45 +71,53 @@ export function StoryCard({ story, viewMode = "grid" }: StoryCardProps) {
               size="icon"
               className="text-muted-foreground hover:text-primary hover:bg-primary/10 flex-shrink-0"
               onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
+                e.preventDefault();
+                e.stopPropagation();
               }}
             >
               <Heart className="w-5 h-5" />
             </Button>
           </div>
-          
+
           <p className="text-sm text-muted-foreground mt-3 line-clamp-2">
             {story.description}
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 mt-4">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Clock className="w-3.5 h-3.5" />
-              {story.playTime}
+          {(story.playTime || story.wordCount || story.tags?.length) && (
+            <div className="flex flex-wrap items-center gap-4 mt-4">
+              {story.playTime && (
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Clock className="w-3.5 h-3.5" />
+                  {story.playTime}
+                </div>
+              )}
+              {story.wordCount && (
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <FileText className="w-3.5 h-3.5" />
+                  {(story.wordCount / 1000).toFixed(0)}k words
+                </div>
+              )}
+              {story.tags && story.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {story.tags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="text-xs px-2 py-0.5 rounded-full bg-secondary/50 text-muted-foreground"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <FileText className="w-3.5 h-3.5" />
-              {(story.wordCount / 1000).toFixed(0)}k words
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {story.tags.slice(0, 3).map((tag) => (
-                <span 
-                  key={tag}
-                  className="text-xs px-2 py-0.5 rounded-full bg-secondary/50 text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       </Link>
-    )
+    );
   }
 
   return (
-    <Link 
+    <Link
       href={`/story/${story.id}`}
       className="group relative rounded-2xl overflow-hidden bg-card border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5"
     >
@@ -115,15 +127,15 @@ export function StoryCard({ story, viewMode = "grid" }: StoryCardProps) {
         <div className="absolute inset-0 flex items-center justify-center">
           <BookOpen className="w-12 h-12 text-primary/40" />
         </div>
-        
+
         {/* Favorite Button */}
         <Button
           variant="ghost"
           size="icon"
           className="absolute top-3 right-3 bg-background/50 backdrop-blur-sm text-muted-foreground hover:text-primary hover:bg-background/80"
           onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
+            e.preventDefault();
+            e.stopPropagation();
           }}
         >
           <Heart className="w-4 h-4" />
@@ -136,18 +148,22 @@ export function StoryCard({ story, viewMode = "grid" }: StoryCardProps) {
           <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
             {story.genre}
           </span>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Star className="w-3 h-3 fill-primary text-primary" />
-            <span className="text-foreground font-medium">{story.rating}</span>
-            <span>({story.reviewCount})</span>
-          </div>
+          {story.rating !== undefined && (
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Star className="w-3 h-3 fill-primary text-primary" />
+              <span className="text-foreground font-medium">
+                {story.rating}
+              </span>
+              <span>({story.reviewCount ?? 0})</span>
+            </div>
+          )}
         </div>
 
         <h3 className="font-serif text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
           {story.title}
         </h3>
-        
-        <Link 
+
+        <Link
           href={`/author/${story.author.id}`}
           className="text-sm text-muted-foreground hover:text-primary transition-colors"
           onClick={(e) => e.stopPropagation()}
@@ -159,17 +175,23 @@ export function StoryCard({ story, viewMode = "grid" }: StoryCardProps) {
           {story.description}
         </p>
 
-        <div className="flex items-center gap-3 mt-4 text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Clock className="w-3 h-3" />
-            {story.playTime}
+        {(story.playTime || story.wordCount) && (
+          <div className="flex items-center gap-3 mt-4 text-xs text-muted-foreground">
+            {story.playTime && (
+              <div className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                {story.playTime}
+              </div>
+            )}
+            {story.wordCount && (
+              <div className="flex items-center gap-1">
+                <FileText className="w-3 h-3" />
+                {(story.wordCount / 1000).toFixed(0)}k
+              </div>
+            )}
           </div>
-          <div className="flex items-center gap-1">
-            <FileText className="w-3 h-3" />
-            {(story.wordCount / 1000).toFixed(0)}k
-          </div>
-        </div>
+        )}
       </div>
     </Link>
-  )
+  );
 }

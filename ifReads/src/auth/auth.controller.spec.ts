@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/style/useImportType: NestJS needs these files to be imported as packages for Dependency Injection*/
 import { ValidationPipe } from '@nestjs/common';
+import fastifyCookie from '@fastify/cookie';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -45,6 +46,7 @@ describe('AuthController (integration)', () => {
       }),
     );
 
+    await app.register(fastifyCookie);
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
   });
@@ -53,7 +55,7 @@ describe('AuthController (integration)', () => {
   beforeEach(() => vi.clearAllMocks());
 
   describe('POST /auth/register', () => {
-    it('201 - deve registrar e retornar access_token', async () => {
+    it('201 - deve registrar, definir cookie e retornar mensagem', async () => {
       mockAuthService.register.mockResolvedValue({
         access_token: 'token_jwt',
         user: { id: 1, name: 'Beatriz', email: 'beatriz@email.com' },
@@ -71,8 +73,16 @@ describe('AuthController (integration)', () => {
 
       expect(response.statusCode).toBe(201);
       expect(JSON.parse(response.body)).toMatchObject({
-        access_token: 'token_jwt',
+        message: 'Registro realizado com sucesso',
+        user: { id: 1, name: 'Beatriz', email: 'beatriz@email.com' },
       });
+      const cookies = response.cookies as Array<{
+        name: string;
+        value: string;
+      }>;
+      expect(cookies.find((c) => c.name === 'access_token')?.value).toBe(
+        'token_jwt',
+      );
       expect(mockAuthService.register).toHaveBeenCalledOnce();
     });
 
@@ -113,7 +123,7 @@ describe('AuthController (integration)', () => {
   });
 
   describe('POST /auth/login', () => {
-    it('200 - deve autenticar e retornar access_token', async () => {
+    it('200 - deve autenticar e definir cookie de sessão', async () => {
       mockAuthService.login.mockResolvedValue({ access_token: 'token_jwt' });
 
       const response = await app.inject({
@@ -124,8 +134,15 @@ describe('AuthController (integration)', () => {
 
       expect(response.statusCode).toBe(200);
       expect(JSON.parse(response.body)).toMatchObject({
-        access_token: 'token_jwt',
+        message: 'Login realizado com sucesso',
       });
+      const cookies = response.cookies as Array<{
+        name: string;
+        value: string;
+      }>;
+      expect(cookies.find((c) => c.name === 'access_token')?.value).toBe(
+        'token_jwt',
+      );
     });
 
     it('400 - deve rejeitar payload sem e-mail', async () => {

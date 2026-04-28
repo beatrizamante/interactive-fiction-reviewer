@@ -6,6 +6,7 @@ import {
   type NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import fastifyCookie from '@fastify/cookie';
 import { AppModule } from './app.module.js';
 
 async function bootstrap() {
@@ -13,6 +14,8 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
+
+  await app.register(fastifyCookie);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,7 +26,10 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors();
+  app.enableCors({
+    origin: process.env.FRONTEND_URL ?? 'http://localhost:3001',
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Avaliador de Ficção Interativa')

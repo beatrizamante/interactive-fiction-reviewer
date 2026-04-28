@@ -1,13 +1,42 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { BookOpen, Sparkles, Users, Star, ChevronRight } from "lucide-react"
-import { AuthModal } from "@/components/auth-modal"
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { BookOpen, Sparkles, Users, Star, ChevronRight } from 'lucide-react';
+import { AuthModal } from '@/components/auth-modal';
+import { fictionsApi } from '@/app/api/fictions';
 
 export default function LandingPage() {
-  const [authModal, setAuthModal] = useState<"signin" | "login" | null>(null)
+  const [authModal, setAuthModal] = useState<'signin' | 'login' | null>(null);
+  const [featuredStories, setFeaturedStories] = useState<
+    Array<{
+      id: string;
+      title: string;
+      author: string;
+      genre: string;
+      rating: number;
+      description: string;
+    }>
+  >([]);
+
+  useEffect(() => {
+    fictionsApi
+      .findAll(1, 3)
+      .then((res) => {
+        setFeaturedStories(
+          res.data.map((f) => ({
+            id: f.id.toString(),
+            title: f.title,
+            author: f.author.name,
+            genre: f.genre ?? '',
+            rating: 0,
+            description: f.description ?? '',
+          })),
+        );
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -34,20 +63,20 @@ export default function LandingPage() {
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
-            <Link 
-              href="/browse" 
+            <Link
+              href="/browse"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Browse
             </Link>
-            <Link 
-              href="/browse?sort=top" 
+            <Link
+              href="/browse?sort=top"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Top Rated
             </Link>
-            <Link 
-              href="/browse?filter=new" 
+            <Link
+              href="/browse?filter=new"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               New Releases
@@ -55,16 +84,16 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               className="text-foreground hover:text-primary hover:bg-primary/10"
-              onClick={() => setAuthModal("login")}
+              onClick={() => setAuthModal('login')}
             >
               Login
             </Button>
-            <Button 
+            <Button
               className="bg-primary/90 text-primary-foreground hover:bg-primary shadow-lg shadow-primary/20"
-              onClick={() => setAuthModal("signin")}
+              onClick={() => setAuthModal('signin')}
             >
               Sign Up
             </Button>
@@ -82,18 +111,18 @@ export default function LandingPage() {
             </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold leading-tight text-balance mb-6">
-              Where Every Choice{" "}
+              Where Every Choice{' '}
               <span className="text-primary">Shapes the Story</span>
             </h1>
 
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 text-pretty">
-              Explore thousands of interactive fiction titles. Rate, review, and discover 
-              text adventures, visual novels, and choice-based narratives crafted by 
-              talented authors worldwide.
+              Explore thousands of interactive fiction titles. Rate, review, and
+              discover text adventures, visual novels, and choice-based
+              narratives crafted by talented authors worldwide.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button 
+              <Button
                 size="lg"
                 asChild
                 className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/25 px-8 group"
@@ -103,11 +132,11 @@ export default function LandingPage() {
                   <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="outline"
                 className="border-border bg-secondary/30 hover:bg-secondary/50 text-foreground"
-                onClick={() => setAuthModal("signin")}
+                onClick={() => setAuthModal('signin')}
               >
                 Create Account
               </Button>
@@ -117,12 +146,12 @@ export default function LandingPage() {
           {/* Stats Section */}
           <div className="max-w-4xl mx-auto mt-24 grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { value: "12K+", label: "Stories", icon: BookOpen },
-              { value: "50K+", label: "Reviews", icon: Star },
-              { value: "8K+", label: "Authors", icon: Users },
-              { value: "4.8", label: "Avg Rating", icon: Sparkles },
+              { value: '12K+', label: 'Stories', icon: BookOpen },
+              { value: '50K+', label: 'Reviews', icon: Star },
+              { value: '8K+', label: 'Authors', icon: Users },
+              { value: '4.8', label: 'Avg Rating', icon: Sparkles },
             ].map((stat) => (
-              <div 
+              <div
                 key={stat.label}
                 className="text-center p-6 rounded-2xl bg-card/50 border border-border/50 backdrop-blur-sm"
               >
@@ -130,7 +159,9 @@ export default function LandingPage() {
                 <div className="text-2xl md:text-3xl font-serif font-bold text-foreground">
                   {stat.value}
                 </div>
-                <div className="text-sm text-muted-foreground mt-1">{stat.label}</div>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -141,8 +172,8 @@ export default function LandingPage() {
               <h2 className="text-2xl md:text-3xl font-serif font-semibold text-foreground">
                 Featured Stories
               </h2>
-              <Link 
-                href="/browse" 
+              <Link
+                href="/browse"
                 className="text-primary hover:text-primary/80 flex items-center gap-1 text-sm"
               >
                 View all
@@ -152,7 +183,7 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredStories.map((story) => (
-                <Link 
+                <Link
                   key={story.id}
                   href={`/story/${story.id}`}
                   className="group relative rounded-2xl overflow-hidden bg-card border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5"
@@ -195,13 +226,13 @@ export default function LandingPage() {
                 Ready to Begin Your Journey?
               </h2>
               <p className="text-muted-foreground mb-8 max-w-lg mx-auto">
-                Join thousands of readers who have discovered their favorite 
+                Join thousands of readers who have discovered their favorite
                 interactive fiction through ifReads.
               </p>
-              <Button 
+              <Button
                 size="lg"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20"
-                onClick={() => setAuthModal("signin")}
+                onClick={() => setAuthModal('signin')}
               >
                 Create Free Account
               </Button>
@@ -214,19 +245,33 @@ export default function LandingPage() {
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-primary" />
-              <span className="font-serif text-lg text-foreground">ifReads</span>
+              <span className="font-serif text-lg text-foreground">
+                ifReads
+              </span>
             </div>
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link href="/about" className="hover:text-foreground transition-colors">
+              <Link
+                href="/about"
+                className="hover:text-foreground transition-colors"
+              >
                 About
               </Link>
-              <Link href="/contact" className="hover:text-foreground transition-colors">
+              <Link
+                href="/contact"
+                className="hover:text-foreground transition-colors"
+              >
                 Contact
               </Link>
-              <Link href="/privacy" className="hover:text-foreground transition-colors">
+              <Link
+                href="/privacy"
+                className="hover:text-foreground transition-colors"
+              >
                 Privacy
               </Link>
-              <Link href="/terms" className="hover:text-foreground transition-colors">
+              <Link
+                href="/terms"
+                className="hover:text-foreground transition-colors"
+              >
                 Terms
               </Link>
             </div>
@@ -238,39 +283,12 @@ export default function LandingPage() {
       </div>
 
       {/* Auth Modal */}
-      <AuthModal 
+      <AuthModal
         isOpen={authModal !== null}
-        mode={authModal || "login"}
+        mode={authModal || 'login'}
         onClose={() => setAuthModal(null)}
         onSwitchMode={(mode) => setAuthModal(mode)}
       />
     </div>
-  )
+  );
 }
-
-const featuredStories = [
-  {
-    id: "1",
-    title: "The Forgotten Lighthouse",
-    author: "Elena Marsh",
-    genre: "Mystery",
-    rating: 4.8,
-    description: "A storm-battered coast holds secrets from a century past. Your choices will illuminate the truth.",
-  },
-  {
-    id: "2", 
-    title: "Starbound Chronicles",
-    author: "Marcus Webb",
-    genre: "Sci-Fi",
-    rating: 4.6,
-    description: "Captain your own vessel through uncharted galaxies where every decision echoes across the cosmos.",
-  },
-  {
-    id: "3",
-    title: "Whispers in the Garden",
-    author: "Amelia Chen",
-    genre: "Fantasy",
-    rating: 4.9,
-    description: "An enchanted garden where flowers speak and paths shift. Find the heart of the maze before dawn.",
-  },
-]

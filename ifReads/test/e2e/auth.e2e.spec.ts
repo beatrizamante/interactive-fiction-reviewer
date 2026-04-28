@@ -20,7 +20,7 @@ afterEach(async () => {
 afterAll(() => app.close());
 
 describe('POST /auth/register', () => {
-  it('201 - deve registrar usuário e retornar access_token', async () => {
+  it('201 - deve registrar usuário, definir cookie e retornar mensagem', async () => {
     const res = await app.inject({
       method: 'POST',
       url: '/auth/register',
@@ -33,14 +33,15 @@ describe('POST /auth/register', () => {
 
     expect(res.statusCode).toBe(201);
     const body = JSON.parse(res.body) as {
-      access_token: string;
+      message: string;
       user: { name: string; email: string };
     };
-    expect(body).toHaveProperty('access_token');
-    expect(body.user).toMatchObject({
-      name: 'Beatriz',
-      email: 'beatriz@email.com',
+    expect(body).toMatchObject({
+      message: 'Registro realizado com sucesso',
+      user: { name: 'Beatriz', email: 'beatriz@email.com' },
     });
+    const cookies = res.cookies as Array<{ name: string; value: string }>;
+    expect(cookies.find((c) => c.name === 'access_token')).toBeDefined();
 
     const dbUser = await prisma.user.findUnique({
       where: { email: 'beatriz@email.com' },
@@ -86,9 +87,11 @@ describe('POST /auth/login', () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(JSON.parse(res.body) as Record<string, unknown>).toHaveProperty(
-      'access_token',
-    );
+    expect(JSON.parse(res.body) as Record<string, unknown>).toMatchObject({
+      message: 'Login realizado com sucesso',
+    });
+    const cookies = res.cookies as Array<{ name: string; value: string }>;
+    expect(cookies.find((c) => c.name === 'access_token')).toBeDefined();
   });
 
   it('401 - deve rejeitar credenciais inválidas', async () => {

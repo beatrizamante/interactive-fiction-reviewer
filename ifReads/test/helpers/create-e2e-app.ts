@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import fastifyCookie from '@fastify/cookie';
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -22,6 +23,7 @@ export async function createE2eApp(): Promise<NestFastifyApplication> {
     }),
   );
 
+  await app.register(fastifyCookie);
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   return app;
