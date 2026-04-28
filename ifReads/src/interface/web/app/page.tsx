@@ -2,13 +2,37 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Sparkles, Users, Star, ChevronRight } from 'lucide-react';
+import {
+  BookOpen,
+  Sparkles,
+  Users,
+  Star,
+  ChevronRight,
+  User,
+  LogOut,
+  Menu,
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AuthModal } from '@/components/auth-modal';
 import { fictionsApi } from '@/app/api/fictions';
+import { authApi } from '@/app/api/middleware/auth';
 
 export default function LandingPage() {
+  const router = useRouter();
   const [authModal, setAuthModal] = useState<'signin' | 'login' | null>(null);
+  const [authedUser, setAuthedUser] = useState<{
+    id: number;
+    email: string;
+  } | null>(null);
   const [featuredStories, setFeaturedStories] = useState<
     Array<{
       id: string;
@@ -19,6 +43,25 @@ export default function LandingPage() {
       description: string;
     }>
   >([]);
+
+  const checkAuth = () => {
+    authApi
+      .checkAuth()
+      .then(({ isValid, user }) => {
+        setAuthedUser(isValid && user ? user : null);
+      })
+      .catch(() => setAuthedUser(null));
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  const handleLogout = async () => {
+    await authApi.logout().catch(() => {});
+    setAuthedUser(null);
+    router.refresh();
+  };
 
   useEffect(() => {
     fictionsApi
@@ -84,19 +127,58 @@ export default function LandingPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              className="text-foreground hover:text-primary hover:bg-primary/10"
-              onClick={() => setAuthModal('login')}
-            >
-              Login
-            </Button>
-            <Button
-              className="bg-primary/90 text-primary-foreground hover:bg-primary shadow-lg shadow-primary/20"
-              onClick={() => setAuthModal('signin')}
-            >
-              Sign Up
-            </Button>
+            {authedUser ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="rounded-full border border-primary/30 hover:border-primary/60"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-primary/20 text-primary text-xs">
+                        {authedUser.email[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44">
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <User className="w-4 h-4" />
+                      My Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onSelect={() => void handleLogout()}
+                    className="flex items-center gap-2 text-destructive focus:text-destructive cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button
+                  variant="ghost"
+                  className="text-foreground hover:text-primary hover:bg-primary/10"
+                  onClick={() => setAuthModal('login')}
+                >
+                  Login
+                </Button>
+                <Button
+                  className="bg-primary/90 text-primary-foreground hover:bg-primary shadow-lg shadow-primary/20"
+                  onClick={() => setAuthModal('signin')}
+                >
+                  Sign Up
+                </Button>
+              </>
+            )}
           </div>
         </nav>
 
@@ -286,7 +368,10 @@ export default function LandingPage() {
       <AuthModal
         isOpen={authModal !== null}
         mode={authModal || 'login'}
-        onClose={() => setAuthModal(null)}
+        onClose={() => {
+          setAuthModal(null);
+          checkAuth();
+        }}
         onSwitchMode={(mode) => setAuthModal(mode)}
       />
     </div>

@@ -51,9 +51,9 @@ export function AuthModal({
         await authApi.register({ name: username, email, password });
       } else {
         await authApi.login({ email, password });
-        router.push('/profile');
       }
       onClose();
+      router.push('/profile');
     } catch (err: any) {
       const msg = err?.response?.data?.message;
       setError(

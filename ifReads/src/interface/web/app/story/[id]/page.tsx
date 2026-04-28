@@ -5,7 +5,6 @@ import {
   BookOpen,
   Sparkles,
   Star,
-  Heart,
   Share2,
   ExternalLink,
   ChevronLeft,
@@ -13,6 +12,8 @@ import {
   Calendar,
 } from 'lucide-react';
 import { ReviewSection } from '@/components/review-section';
+import { AppNavbar } from '@/components/app-navbar';
+import { FavoriteButton } from '@/components/favorite-button';
 import { fictionsApi } from '@/app/api/fictions';
 
 interface PageProps {
@@ -66,31 +67,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
       </div>
 
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border/50">
-        <div className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-20">
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <BookOpen className="w-7 h-7 text-primary transition-transform group-hover:scale-110" />
-              <Sparkles className="w-2.5 h-2.5 text-teal-glow absolute -top-0.5 -right-0.5" />
-            </div>
-            <span className="text-xl font-serif font-semibold text-foreground">
-              ifReads
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              className="text-foreground hover:text-primary hover:bg-primary/10"
-            >
-              Login
-            </Button>
-            <Button className="bg-primary/90 text-primary-foreground hover:bg-primary">
-              Sign Up
-            </Button>
-          </div>
-        </div>
-      </header>
+      <AppNavbar />
 
       <main className="relative z-10 px-6 md:px-12 lg:px-20 py-8">
         {/* Back Link */}
@@ -123,13 +100,7 @@ export default async function StoryDetailPage({ params }: PageProps) {
                 Play Story
               </Button>
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="flex-1 bg-secondary/30 border-border/50 hover:bg-secondary/50 text-foreground"
-                >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Favorite
-                </Button>
+                <FavoriteButton fictionId={parseInt(id)} />
                 <Button
                   variant="outline"
                   className="bg-secondary/30 border-border/50 hover:bg-secondary/50 text-foreground"

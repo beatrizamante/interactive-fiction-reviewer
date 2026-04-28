@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { BookOpen, Star, Clock, FileText, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { usersApi } from '@/app/api/middleware/users';
 
 interface Story {
   id: string;
@@ -20,9 +22,46 @@ interface Story {
 interface StoryCardProps {
   story: Story;
   viewMode?: 'grid' | 'list';
+  initialFavorited?: boolean;
+  onToggleFavorite?: (fictionId: number, nowFavorited: boolean) => void;
 }
 
-export function StoryCard({ story, viewMode = 'grid' }: StoryCardProps) {
+export function StoryCard({
+  story,
+  viewMode = 'grid',
+  initialFavorited = false,
+  onToggleFavorite,
+}: StoryCardProps) {
+  const [isFav, setIsFav] = useState(initialFavorited);
+  const [favLoading, setFavLoading] = useState(false);
+
+  const handleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (favLoading) return;
+    setFavLoading(true);
+    const fictionId = Number(story.id);
+    try {
+      if (isFav) {
+        await usersApi.removeFavorite(fictionId);
+        setIsFav(false);
+        onToggleFavorite?.(fictionId, false);
+      } else {
+        await usersApi.addFavorite(fictionId);
+        setIsFav(true);
+        onToggleFavorite?.(fictionId, true);
+      }
+    } catch (err: any) {
+      if (err?.response?.status !== 401) {
+        console.error(
+          '[StoryCard] favorite toggle failed:',
+          err?.response?.data ?? err?.message ?? err,
+        );
+      }
+    } finally {
+      setFavLoading(false);
+    }
+  };
   if (viewMode === 'list') {
     return (
       <Link
@@ -70,12 +109,12 @@ export function StoryCard({ story, viewMode = 'grid' }: StoryCardProps) {
               variant="ghost"
               size="icon"
               className="text-muted-foreground hover:text-primary hover:bg-primary/10 flex-shrink-0"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
+              onClick={(e) => void handleFavorite(e)}
+              disabled={favLoading}
             >
-              <Heart className="w-5 h-5" />
+              <Heart
+                className={`w-5 h-5 transition-colors ${isFav ? 'fill-primary text-primary' : ''}`}
+              />
             </Button>
           </div>
 
@@ -133,12 +172,12 @@ export function StoryCard({ story, viewMode = 'grid' }: StoryCardProps) {
           variant="ghost"
           size="icon"
           className="absolute top-3 right-3 bg-background/50 backdrop-blur-sm text-muted-foreground hover:text-primary hover:bg-background/80"
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
+          onClick={(e) => void handleFavorite(e)}
+          disabled={favLoading}
         >
-          <Heart className="w-4 h-4" />
+          <Heart
+            className={`w-4 h-4 transition-colors ${isFav ? 'fill-primary text-primary' : ''}`}
+          />
         </Button>
       </div>
 
