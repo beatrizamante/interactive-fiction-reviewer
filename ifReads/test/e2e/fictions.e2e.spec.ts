@@ -29,7 +29,10 @@ async function registerAndGetToken(
     url: '/auth/register',
     payload: { name, email, password },
   });
-  return (JSON.parse(res.body) as { access_token: string }).access_token;
+  const cookies = res.cookies as Array<{ name: string; value: string }>;
+  const tokenCookie = cookies.find((c) => c.name === 'access_token');
+  if (!tokenCookie) throw new Error('Cookie access_token não encontrado');
+  return tokenCookie.value;
 }
 
 const fictionPayload = {
