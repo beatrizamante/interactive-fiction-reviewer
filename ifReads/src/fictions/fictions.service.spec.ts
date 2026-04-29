@@ -14,6 +14,10 @@ const mockPrisma = {
     update: vi.fn(),
     delete: vi.fn(),
   },
+  review: {
+    groupBy: vi.fn().mockResolvedValue([]),
+    aggregate: vi.fn().mockResolvedValue({ _avg: { rating: null } }),
+  },
 };
 
 const baseFiction = {
@@ -24,6 +28,7 @@ const baseFiction = {
   publishedAt: 1899,
   status: 'published',
   authorId: 10,
+  averageRating: null,
   createdAt: new Date(),
   updatedAt: new Date(),
 };

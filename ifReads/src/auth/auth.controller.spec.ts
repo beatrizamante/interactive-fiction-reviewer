@@ -18,11 +18,14 @@ import {
 
 import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
+import { JwtAuthGuard } from './jwt-auth.guard.js';
 
 const mockAuthService = {
   register: vi.fn(),
   login: vi.fn(),
 };
+
+const mockJwtAuthGuard = { canActivate: vi.fn().mockReturnValue(true) };
 
 describe('AuthController (integration)', () => {
   let app: NestFastifyApplication;
@@ -31,7 +34,10 @@ describe('AuthController (integration)', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [{ provide: AuthService, useValue: mockAuthService }],
-    }).compile();
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue(mockJwtAuthGuard)
+      .compile();
 
     app = module.createNestApplication<NestFastifyApplication>(
       new FastifyAdapter(),
