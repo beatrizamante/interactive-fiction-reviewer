@@ -107,8 +107,9 @@ export default function ProfilePage() {
     );
   }
 
-  const initials = user.name
+  const initials = (user.name ?? '')
     .split(' ')
+    .filter(Boolean)
     .map((n) => n[0])
     .join('');
 
