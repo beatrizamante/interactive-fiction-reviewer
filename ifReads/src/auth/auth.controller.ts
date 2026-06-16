@@ -25,8 +25,8 @@ import * as jwtPayloadInterface from './jwt-payload.interface.js';
 const COOKIE_NAME = 'access_token';
 const cookieOptions = {
   httpOnly: true,
-  sameSite: 'strict' as const,
-  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'none' as const,
+  secure: true,
   path: '/',
   maxAge: 60 * 60 * 24 * 7,
 };
