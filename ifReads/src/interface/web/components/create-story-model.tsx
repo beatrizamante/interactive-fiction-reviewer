@@ -648,17 +648,23 @@ export function CreateStoryModal({
                   variant="outline"
                   onClick={() => setStep(3)}
                   className="flex-1 border-border hover:bg-muted"
+                  disabled={loading}
                 >
                   Back
                 </Button>
                 <Button
                   type="submit"
-                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                  disabled={loading}
+                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Upload className="w-4 h-4 mr-2" />
-                  Publish Story
+                  {loading ? 'Publishing...' : 'Publish Story'}
                 </Button>
               </div>
+
+              {error && (
+                <p className="text-sm text-destructive text-center">{error}</p>
+              )}
             </div>
           )}
         </form>
