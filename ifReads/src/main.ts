@@ -28,8 +28,14 @@ async function bootstrap() {
   );
 
   app.useGlobalFilters(new HttpExceptionFilter());
+  const allowedOrigins = [
+    process.env.FRONTEND_URL ?? 'http://localhost:3000',
+    'http://localhost:3000',
+    /^https:\/\/interactive-fiction-reviewer.*\.vercel\.app$/,
+  ];
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
   });
