@@ -121,11 +121,9 @@ export default function TopRatedPage() {
           <>
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               {filteredStories.slice(0, 3).map((fiction, index) => {
-                const genres =
-                  fiction.genre
-                    ?.split(',')
-                    .map((g) => g.trim())
-                    .filter(Boolean) ?? [];
+                const genres = (fiction.genre?.split(',') ?? [])
+                  .map((g) => g.trim())
+                  .filter(Boolean);
                 const rank = index + 1;
                 return (
                   <Link key={fiction.id} href={`/story/${fiction.id}`}>
@@ -193,11 +191,9 @@ export default function TopRatedPage() {
 
               <div className="space-y-3">
                 {filteredStories.slice(3).map((fiction, index) => {
-                  const genres =
-                    fiction.genre
-                      ?.split(',')
-                      .map((g) => g.trim())
-                      .filter(Boolean) ?? [];
+                  const genres = (fiction.genre?.split(',') ?? [])
+                    .map((g) => g.trim())
+                    .filter(Boolean);
                   const rank = index + 4;
                   return (
                     <Link

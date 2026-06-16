@@ -262,12 +262,10 @@ export default function ProfilePage() {
                                   </h3>
                                 </Link>
                                 <div className="flex items-center gap-2 mt-1">
-                                  {(
-                                    story.genre
-                                      ?.split(',')
-                                      .map((g) => g.trim())
-                                      .filter(Boolean) ?? []
-                                  ).map((genre) => (
+                                  {(story.genre?.split(',') ?? [])
+                                    .map((g) => g.trim())
+                                    .filter(Boolean)
+                                    .map((genre) => (
                                     <Badge
                                       key={genre}
                                       variant="secondary"

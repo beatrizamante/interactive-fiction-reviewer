@@ -139,11 +139,9 @@ export default function NewReleasesPage() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {filteredStories.map((fiction) => {
-              const genres =
-                fiction.genre
-                  ?.split(',')
-                  .map((g) => g.trim())
-                  .filter(Boolean) ?? [];
+              const genres = (fiction.genre?.split(',') ?? [])
+                .map((g) => g.trim())
+                .filter(Boolean);
               return (
                 <Link key={fiction.id} href={`/story/${fiction.id}`}>
                   <div className="group rounded-xl overflow-hidden bg-card border border-border hover:border-primary/30 transition-all">
